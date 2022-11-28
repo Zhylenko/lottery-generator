@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Api\V1\Lottery;
+use App\Observers\Api\V1\LotteryObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +20,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+    ];
+
+    protected $observers = [
+        Lottery::class => [LotteryObserver::class],
     ];
 
     /**
