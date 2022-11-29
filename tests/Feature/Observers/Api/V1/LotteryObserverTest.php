@@ -16,7 +16,7 @@ class LotteryObserverTest extends TestCase
     {
         $lottery = Lottery::all()->random();
 
-        $data = $lottery->getAttributes();
+        $data = $lottery->toArray();
         $data['numbers_count'] += 1;
 
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
@@ -39,7 +39,7 @@ class LotteryObserverTest extends TestCase
     {
         $lottery = Lottery::all()->random();
 
-        $data = $lottery->getAttributes();
+        $data = $lottery->toArray();
         $data['numbers_from'] -= 1;
 
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
@@ -62,7 +62,7 @@ class LotteryObserverTest extends TestCase
     {
         $lottery = Lottery::all()->random();
 
-        $data = $lottery->getAttributes();
+        $data = $lottery->toArray();
         $data['numbers_to'] += 1;
 
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
@@ -102,7 +102,7 @@ class LotteryObserverTest extends TestCase
         $this->getJson($uri);
         $this->assertTrue(Cache::tags(['lotteries'])->has('page_' . $page));
 
-        $data = Lottery::factory()->make()->getAttributes();
+        $data = Lottery::factory()->make()->toArray();
 
         $response = $this->postJson(Route('lottery.store'), $data);
         $response->assertStatus(201);
@@ -119,7 +119,7 @@ class LotteryObserverTest extends TestCase
         $this->assertTrue(Cache::tags(['lotteries'])->has('page_' . $page));
 
         $lottery = Lottery::all()->random();
-        $data = Lottery::factory()->make()->getAttributes();
+        $data = Lottery::factory()->make()->toArray();
 
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
         $response->assertStatus(200);

@@ -60,7 +60,7 @@ class LotteryControllerTest extends TestCase
 
     public function test_store_lottery()
     {
-        $data = Lottery::factory()->make()->getAttributes();
+        $data = Lottery::factory()->make()->toArray();
 
         $response = $this->postJson(Route('lottery.store'), $data);
 
@@ -78,7 +78,7 @@ class LotteryControllerTest extends TestCase
     public function test_update_lottery()
     {
         $lottery = Lottery::all()->random();
-        $data = Lottery::factory()->make()->getAttributes();
+        $data = Lottery::factory()->make()->toArray();
 
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
