@@ -40,3 +40,19 @@ Route::controller(App\Http\Controllers\Api\V1\LotteryController::class)
         Route::delete('/{lottery}', 'destroy')
             ->name('.destroy');
     });
+
+Route::controller(App\Http\Controllers\Api\V1\CodeController::class)
+    ->prefix('codes')
+    ->name('code')
+    ->group(function () {
+        Route::get('/', 'index')
+            ->name('.index');
+        Route::get('/{code}', 'show')
+            ->name('.show');
+        Route::post('/', 'store')
+            ->name('.store');
+        Route::put('/{code}', 'update')
+            ->name('.update');
+        Route::delete('/{code}', 'destroy')
+            ->name('.destroy');
+    });
