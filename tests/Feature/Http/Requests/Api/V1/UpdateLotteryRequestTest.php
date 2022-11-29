@@ -26,7 +26,7 @@ class UpdateLotteryRequestTest extends TestCase
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
                 'numbers_count',
                 'numbers_from',
@@ -45,7 +45,7 @@ class UpdateLotteryRequestTest extends TestCase
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
             ]);
     }
@@ -63,7 +63,7 @@ class UpdateLotteryRequestTest extends TestCase
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'numbers_count',
                 'numbers_from',
                 'numbers_to',
@@ -82,7 +82,7 @@ class UpdateLotteryRequestTest extends TestCase
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
             ]);
     }
@@ -115,7 +115,7 @@ class UpdateLotteryRequestTest extends TestCase
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
                 'numbers_count',
             ]);
@@ -133,7 +133,7 @@ class UpdateLotteryRequestTest extends TestCase
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
                 'numbers_count',
             ]);
@@ -154,7 +154,7 @@ class UpdateLotteryRequestTest extends TestCase
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'numbers_from',
                 'numbers_to',
             ]);

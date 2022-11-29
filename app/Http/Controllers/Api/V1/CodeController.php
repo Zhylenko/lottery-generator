@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\StoreCodeRequest;
 use App\Http\Resources\Api\V1\CodeCollection;
 use App\Http\Resources\Api\V1\CodeResource;
 use App\Models\Api\V1\Code;
@@ -32,9 +33,13 @@ class CodeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCodeRequest $request)
     {
-        //
+        $code = Code::create([
+            'code' => $request->code,
+        ]);
+
+        return $this->show($code);
     }
 
     /**

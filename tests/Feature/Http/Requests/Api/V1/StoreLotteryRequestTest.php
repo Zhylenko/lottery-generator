@@ -24,7 +24,7 @@ class StoreLotteryRequestTest extends TestCase
         $response = $this->postJson(Route('lottery.store'), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
                 'numbers_count',
                 'numbers_from',
@@ -41,7 +41,7 @@ class StoreLotteryRequestTest extends TestCase
         $response = $this->postJson(Route('lottery.store'), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
             ]);
     }
@@ -57,7 +57,25 @@ class StoreLotteryRequestTest extends TestCase
         $response = $this->postJson(Route('lottery.store'), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
+                'numbers_count',
+                'numbers_from',
+                'numbers_to',
+            ]);
+    }
+
+    public function test_float_fields_error()
+    {
+        $data = [
+            'numbers_count' => $this->faker->randomFloat(5, 1, 12),
+            'numbers_from' => $this->faker->randomFloat(5, 1, 24),
+            'numbers_to' => $this->faker->randomFloat(5, 24, 48),
+        ];
+
+        $response = $this->postJson(Route('lottery.store'), $data);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors([
                 'numbers_count',
                 'numbers_from',
                 'numbers_to',
@@ -74,7 +92,7 @@ class StoreLotteryRequestTest extends TestCase
         $response = $this->postJson(Route('lottery.store'), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
             ]);
     }
@@ -89,7 +107,7 @@ class StoreLotteryRequestTest extends TestCase
         $response = $this->postJson(Route('lottery.store'), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
                 'numbers_count',
             ]);
@@ -105,7 +123,7 @@ class StoreLotteryRequestTest extends TestCase
         $response = $this->postJson(Route('lottery.store'), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'name',
                 'numbers_count',
             ]);
@@ -124,7 +142,7 @@ class StoreLotteryRequestTest extends TestCase
         $response = $this->postJson(Route('lottery.store'), $data);
 
         $response->assertStatus(422)
-            ->assertInvalid([
+            ->assertJsonValidationErrors([
                 'numbers_from',
                 'numbers_to',
             ]);

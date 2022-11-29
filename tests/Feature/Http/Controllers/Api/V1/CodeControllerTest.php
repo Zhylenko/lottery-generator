@@ -51,4 +51,18 @@ class CodeControllerTest extends TestCase
                 ],
             ]);
     }
+
+    public function test_store_code()
+    {
+        $data = Code::factory()->make()->toArray();
+
+        $response = $this->postJson(Route('code.store'), $data);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    'code' => $data['code'],
+                ],
+            ]);
+    }
 }

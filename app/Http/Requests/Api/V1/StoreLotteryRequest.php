@@ -34,20 +34,20 @@ class StoreLotteryRequest extends FormRequest
             'numbers_count' => [
                 'bail',
                 'required',
-                'numeric',
+                'integer',
                 'min:1',
                 'max:255',
             ],
             'numbers_from' => [
                 'bail',
                 'required',
-                'numeric',
+                'integer',
                 'lte:numbers_to',
             ],
             'numbers_to' => [
                 'bail',
                 'required',
-                'numeric',
+                'integer',
                 'gte:numbers_from',
             ],
         ];

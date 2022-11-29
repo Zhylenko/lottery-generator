@@ -100,6 +100,7 @@ class LotteryObserverTest extends TestCase
         $uri = Route('lottery.index', ['page' => $page]);
 
         $this->getJson($uri);
+        $this->assertTrue(Cache::tags(['lotteries'])->has('page_' . $page));
 
         $data = Lottery::factory()->make()->getAttributes();
 
@@ -115,6 +116,7 @@ class LotteryObserverTest extends TestCase
         $uri = Route('lottery.index', ['page' => $page]);
 
         $this->getJson($uri);
+        $this->assertTrue(Cache::tags(['lotteries'])->has('page_' . $page));
 
         $lottery = Lottery::all()->random();
         $data = Lottery::factory()->make()->getAttributes();
@@ -131,6 +133,7 @@ class LotteryObserverTest extends TestCase
         $uri = Route('lottery.index', ['page' => $page]);
 
         $this->getJson($uri);
+        $this->assertTrue(Cache::tags(['lotteries'])->has('page_' . $page));
 
         $lottery = Lottery::all()->random();
 
