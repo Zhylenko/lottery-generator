@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\CodeCollection;
+use App\Http\Resources\Api\V1\CodeResource;
 use App\Models\Api\V1\Code;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,7 +45,7 @@ class CodeController extends Controller
      */
     public function show(Code $code)
     {
-        //
+        return new CodeResource($code);
     }
 
     /**
