@@ -15,7 +15,7 @@ class CodeObserver
      */
     public function creating(Code $code)
     {
-        $code->code = array_map('intval', $code->code);
+        $code->code = $this->formatCode($code->code);
     }
 
     /**
@@ -27,6 +27,17 @@ class CodeObserver
     public function created(Code $code)
     {
         $this->clearCache();
+    }
+
+    /**
+     * Handle the Code "updating" event.
+     *
+     * @param  \App\Models\Api\V1\Code  $code
+     * @return void
+     */
+    public function updating(Code $code)
+    {
+        $code->code = $this->formatCode($code->code);
     }
 
     /**
@@ -76,5 +87,10 @@ class CodeObserver
     private function clearCache()
     {
         Cache::tags(['codes'])->flush();
+    }
+
+    private function formatCode(array $code = [])
+    {
+        return array_map('intval', $code);
     }
 }

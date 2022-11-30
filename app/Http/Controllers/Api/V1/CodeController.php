@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreCodeRequest;
+use App\Http\Requests\Api\V1\UpdateCodeRequest;
 use App\Http\Resources\Api\V1\CodeCollection;
 use App\Http\Resources\Api\V1\CodeResource;
 use App\Models\Api\V1\Code;
@@ -60,9 +61,13 @@ class CodeController extends Controller
      * @param  \App\Models\Api\V1\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Code $code)
+    public function update(UpdateCodeRequest $request, Code $code)
     {
-        //
+        $code->update([
+            'code' => $request->code,
+        ]);
+
+        return $this->show($code);
     }
 
     /**

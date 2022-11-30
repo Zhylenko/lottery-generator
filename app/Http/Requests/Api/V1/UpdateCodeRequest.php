@@ -13,7 +13,7 @@ class UpdateCodeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,16 @@ class UpdateCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'code' => [
+                'bail',
+                'required',
+                'array',
+            ],
+            'code.*' => [
+                'bail',
+                'integer',
+                // 'distinct',
+            ],
         ];
     }
 }

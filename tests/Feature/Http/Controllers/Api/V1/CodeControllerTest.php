@@ -65,4 +65,20 @@ class CodeControllerTest extends TestCase
                 ],
             ]);
     }
+
+    public function test_update_code()
+    {
+        $code = Code::all()->random();
+        $data = Code::factory()->make()->toArray();
+
+        $response = $this->putJson(Route('code.update', $code), $data);
+
+        $response->assertStatus(200)
+            ->assertExactJson([
+                'data' => [
+                    'id' => $code->id,
+                    'code' => $data['code'],
+                ],
+            ]);
+    }
 }
