@@ -14,7 +14,7 @@ class LotteryObserverTest extends TestCase
 
     // public function test_lottery_codes_delete_on_lottery_numbers_count_field_updating()
     // {
-    //     $lottery = Lottery::all()->random();
+    //     $lottery = Lottery::inRandomOrder()->first();
 
     //     $data = $lottery->toArray();
     //     $data['numbers_count'] += 1;
@@ -37,7 +37,7 @@ class LotteryObserverTest extends TestCase
 
     // public function test_lottery_codes_delete_on_lottery_numbers_from_field_updating()
     // {
-    //     $lottery = Lottery::all()->random();
+    //     $lottery = Lottery::inRandomOrder()->first();
 
     //     $data = $lottery->toArray();
     //     $data['numbers_from'] -= 1;
@@ -60,7 +60,7 @@ class LotteryObserverTest extends TestCase
 
     // public function test_lottery_codes_delete_on_lottery_numbers_to_field_updating()
     // {
-    //     $lottery = Lottery::all()->random();
+    //     $lottery = Lottery::inRandomOrder()->first();
 
     //     $data = $lottery->toArray();
     //     $data['numbers_to'] += 1;
@@ -83,7 +83,7 @@ class LotteryObserverTest extends TestCase
 
     // public function test_lottery_codes_delete_after_lottery_deleted()
     // {
-    //     $lottery = Lottery::all()->random();
+    //     $lottery = Lottery::inRandomOrder()->first();
 
     //     $response = $this->deleteJson(Route('lottery.destroy', $lottery));
 
@@ -118,7 +118,7 @@ class LotteryObserverTest extends TestCase
         $this->getJson($uri);
         $this->assertTrue(Cache::tags(['lotteries'])->has('page_' . $page));
 
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
         $data = Lottery::factory()->make()->toArray();
 
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
@@ -135,7 +135,7 @@ class LotteryObserverTest extends TestCase
         $this->getJson($uri);
         $this->assertTrue(Cache::tags(['lotteries'])->has('page_' . $page));
 
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $response = $this->deleteJson(Route('lottery.destroy', $lottery));
         $response->assertStatus(200)

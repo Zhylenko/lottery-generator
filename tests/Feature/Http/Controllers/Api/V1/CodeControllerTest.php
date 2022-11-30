@@ -39,7 +39,7 @@ class CodeControllerTest extends TestCase
 
     public function test_get_show()
     {
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
 
         $response = $this->getJson(Route('code.show', $code));
 
@@ -68,7 +68,7 @@ class CodeControllerTest extends TestCase
 
     public function test_update_code()
     {
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
         $data = Code::factory()->make()->toArray();
 
         $response = $this->putJson(Route('code.update', $code), $data);
@@ -84,7 +84,7 @@ class CodeControllerTest extends TestCase
 
     public function test_destroy_code()
     {
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
 
         $response = $this->deleteJson(Route('code.destroy', $code));
 

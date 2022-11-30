@@ -42,7 +42,7 @@ class LotteryControllerTest extends TestCase
 
     public function test_get_show()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $response = $this->getJson(Route('lottery.show', $lottery));
 
@@ -77,7 +77,7 @@ class LotteryControllerTest extends TestCase
 
     public function test_update_lottery()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
         $data = Lottery::factory()->make()->toArray();
 
         $response = $this->putJson(Route('lottery.update', $lottery), $data);
@@ -96,7 +96,7 @@ class LotteryControllerTest extends TestCase
 
     public function test_destroy_lottery()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $response = $this->deleteJson(Route('lottery.destroy', $lottery));
 

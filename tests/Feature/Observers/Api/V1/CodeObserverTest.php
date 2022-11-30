@@ -31,7 +31,7 @@ class CodeObserverTest extends TestCase
 
     public function test_code_field_formatted_after_code_updated()
     {
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
 
         $data = [
             'code' => [1, "3"],
@@ -72,7 +72,7 @@ class CodeObserverTest extends TestCase
         $this->getJson($uri);
         $this->assertTrue(Cache::tags(['codes'])->has('page_' . $page));
 
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
         $data = Code::factory()->make()->toArray();
 
         $response = $this->putJson(Route('code.update', $code), $data);
@@ -89,7 +89,7 @@ class CodeObserverTest extends TestCase
         $this->getJson($uri);
         $this->assertTrue(Cache::tags(['codes'])->has('page_' . $page));
 
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
 
         $response = $this->deleteJson(Route('code.destroy', $code));
 

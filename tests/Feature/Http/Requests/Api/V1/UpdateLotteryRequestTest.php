@@ -14,7 +14,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_empty_fields_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $data = [
             'name' => '',
@@ -36,7 +36,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_numeric_fields_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $data = [
             'name' => $this->faker->numberBetween(1, 10),
@@ -52,7 +52,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_not_numeric_fields_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $data = [
             'numbers_count' => $this->faker->word(),
@@ -72,9 +72,9 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_not_unique_fields_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
-        $randomLottery = Lottery::where('id', '!=', $lottery->id)->get()->random();
+        $randomLottery = Lottery::where('id', '!=', $lottery->id)->inRandomOrder()->first();
         $data = [
             'name' => $randomLottery->name,
         ];
@@ -89,7 +89,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_unique_fields_without_changes_not_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $data = [
             'name' => $lottery->name,
@@ -105,7 +105,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_min_length_fields_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $data = [
             'name' => '',
@@ -123,7 +123,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_max_length_fields_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $data = [
             'name' => Str::random(256),
@@ -141,7 +141,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_numbers_from_field_greater_than_numbers_to_field_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $from = 36;
         $to = 35;
@@ -162,7 +162,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_numbers_from_field_equals_to_numbers_to_field_not_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $from = 35;
         $to = 35;
@@ -183,7 +183,7 @@ class UpdateLotteryRequestTest extends TestCase
 
     public function test_numbers_from_field_less_then_numbers_to_field_not_error()
     {
-        $lottery = Lottery::all()->random();
+        $lottery = Lottery::inRandomOrder()->first();
 
         $from = 34;
         $to = 35;

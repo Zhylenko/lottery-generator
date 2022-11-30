@@ -84,7 +84,7 @@ class StoreLotteryRequestTest extends TestCase
 
     public function test_not_unique_fields_error()
     {
-        $randomLottery = Lottery::all()->random();
+        $randomLottery = Lottery::inRandomOrder()->first();
         $data = [
             'name' => $randomLottery->name,
         ];

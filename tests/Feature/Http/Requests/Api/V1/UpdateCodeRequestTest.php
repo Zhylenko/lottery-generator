@@ -13,7 +13,7 @@ class UpdateCodeRequestTest extends TestCase
 
     public function test_empty_fields_error()
     {
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
 
         $data = [
             'code' => '',
@@ -29,7 +29,7 @@ class UpdateCodeRequestTest extends TestCase
 
     public function test_not_array_fields_error()
     {
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
 
         $data = [
             'code' => $this->faker->word(),
@@ -45,7 +45,7 @@ class UpdateCodeRequestTest extends TestCase
 
     public function test_array_elements_not_integer_fields_error()
     {
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
 
         $data = [
             'code' => [1, $this->faker->word()],
@@ -61,7 +61,7 @@ class UpdateCodeRequestTest extends TestCase
 
     public function test_array_elements_float_fields_error()
     {
-        $code = Code::all()->random();
+        $code = Code::inRandomOrder()->first();
 
         $data = [
             'code' => [1, $this->faker->randomFloat(5, -10, 10)],
@@ -77,7 +77,7 @@ class UpdateCodeRequestTest extends TestCase
 
     // public function test_array_elements_not_distinct_fields_error()
     // {
-    //     $code = Code::all()->random();
+    //     $code = Code::inRandomOrder()->first();
 
     //     $data = [
     //         'code' => [1, 1],
