@@ -12,7 +12,7 @@ class FormatPageNumberFieldTest extends TestCase
 {
     use WithFaker;
 
-    private $middleware, $page;
+    private $middleware;
 
     public function setUp(): void
     {
@@ -36,10 +36,10 @@ class FormatPageNumberFieldTest extends TestCase
     public function test_request_with_empty_page_field_formatted()
     {
         $request = new Request();
-        $this->page = '';
+        $page = '';
 
         $request->merge([
-            'page' => $this->page,
+            'page' => $page,
         ]);
 
         $this->middleware->handle($request, function ($nextRequest) {
@@ -50,10 +50,10 @@ class FormatPageNumberFieldTest extends TestCase
     public function test_request_with_zero_page_field_formatted()
     {
         $request = new Request();
-        $this->page = 0;
+        $page = 0;
 
         $request->merge([
-            'page' => $this->page,
+            'page' => $page,
         ]);
 
         $this->middleware->handle($request, function ($nextRequest) {
@@ -64,38 +64,38 @@ class FormatPageNumberFieldTest extends TestCase
     public function test_request_with_positive_numeric_page_field_formatted()
     {
         $request = new Request();
-        $this->page = $this->faker->numberBetween(1, 10);
+        $page = $this->faker->numberBetween(1, 10);
 
         $request->merge([
-            'page' => $this->page,
+            'page' => $page,
         ]);
 
-        $this->middleware->handle($request, function ($nextRequest) {
-            $this->assertEquals($this->page, $nextRequest->page);
+        $this->middleware->handle($request, function ($nextRequest) use ($page) {
+            $this->assertEquals($page, $nextRequest->page);
         });
     }
 
     public function test_request_with_negative_numeric_page_field_formatted()
     {
         $request = new Request();
-        $this->page = $this->faker->numberBetween(-10, -1);
+        $page = $this->faker->numberBetween(-10, -1);
 
         $request->merge([
-            'page' => $this->page,
+            'page' => $page,
         ]);
 
-        $this->middleware->handle($request, function ($nextRequest) {
-            $this->assertEquals(abs($this->page), $nextRequest->page);
+        $this->middleware->handle($request, function ($nextRequest) use ($page) {
+            $this->assertEquals(abs($page), $nextRequest->page);
         });
     }
 
     public function test_request_with_float_page_field_formatted()
     {
         $request = new Request();
-        $this->page = $this->faker->randomFloat(5, -10, 10);
+        $page = $this->faker->randomFloat(5, -10, 10);
 
         $request->merge([
-            'page' => $this->page,
+            'page' => $page,
         ]);
 
         $this->middleware->handle($request, function ($nextRequest) {
@@ -106,10 +106,10 @@ class FormatPageNumberFieldTest extends TestCase
     public function test_request_with_text_page_field_formatted()
     {
         $request = new Request();
-        $this->page = $this->faker->word();
+        $page = $this->faker->word();
 
         $request->merge([
-            'page' => $this->page,
+            'page' => $page,
         ]);
 
         $this->middleware->handle($request, function ($nextRequest) {
@@ -120,10 +120,10 @@ class FormatPageNumberFieldTest extends TestCase
     public function test_request_with_numeric_text_page_field_formatted()
     {
         $request = new Request();
-        $this->page = $this->faker->numberBetween(-10, 10) . $this->faker->word();
+        $page = $this->faker->numberBetween(-10, 10) . $this->faker->word();
 
         $request->merge([
-            'page' => $this->page,
+            'page' => $page,
         ]);
 
         $this->middleware->handle($request, function ($nextRequest) {
