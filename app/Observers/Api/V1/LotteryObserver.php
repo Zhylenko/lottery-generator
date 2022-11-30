@@ -40,7 +40,6 @@ class LotteryObserver
         $oldLottery = Lottery::findOrFail($lottery->id);
 
         if ($lottery->numbers_count != $oldLottery->numbers_count || $lottery->numbers_from != $oldLottery->numbers_from || $lottery->numbers_to != $oldLottery->numbers_to) {
-            $oldLottery->codes()->delete();
         }
     }
 
@@ -52,8 +51,6 @@ class LotteryObserver
      */
     public function deleted(Lottery $lottery)
     {
-        $lottery->codes()->delete();
-
         $this->clearCache();
     }
 

@@ -13,18 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(App\Http\Controllers\Api\V1\LotteryCodeController::class)
-    ->prefix('lotteries')
-    ->name('lottery.code')
-    ->group(function () {
-        Route::get('/codes', 'index')
-            ->name('.index');
-        Route::get('/{lottery}/codes', 'index')
-            ->name('.index.lottery');
-        Route::get('/codes/{lotteryCode}', 'show')
-            ->name('.show');
-    });
-
 Route::controller(App\Http\Controllers\Api\V1\LotteryController::class)
     ->prefix('lotteries')
     ->name('lottery')

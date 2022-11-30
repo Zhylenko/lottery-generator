@@ -15,9 +15,4 @@ class Lottery extends Model
         'numbers_from',
         'numbers_to',
     ];
-
-    public function codes()
-    {
-        return $this->hasMany(LotteryCode::class);
-    }
 }

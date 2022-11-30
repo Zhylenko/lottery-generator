@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Api\V1\Lottery;
-use App\Models\Api\V1\LotteryCode;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -45,8 +44,6 @@ class LotterySeeder extends Seeder
             ]);
         }
 
-        Lottery::factory(100)->create()->each(function (Lottery $lottery) {
-            $lottery->codes()->saveMany(LotteryCode::factory(2)->make());
-        });
+        Lottery::factory(100)->create();
     }
 }

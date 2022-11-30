@@ -12,87 +12,87 @@ class LotteryObserverTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function test_lottery_codes_delete_on_lottery_numbers_count_field_updating()
-    {
-        $lottery = Lottery::all()->random();
+    // public function test_lottery_codes_delete_on_lottery_numbers_count_field_updating()
+    // {
+    //     $lottery = Lottery::all()->random();
 
-        $data = $lottery->toArray();
-        $data['numbers_count'] += 1;
+    //     $data = $lottery->toArray();
+    //     $data['numbers_count'] += 1;
 
-        $response = $this->putJson(Route('lottery.update', $lottery), $data);
+    //     $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
-        $response->assertStatus(200)
-            ->assertExactJson([
-                'data' => [
-                    'id' => $lottery->id,
-                    'name' => $data['name'],
-                    'numbers_count' => $data['numbers_count'],
-                    'numbers_from' => $data['numbers_from'],
-                    'numbers_to' => $data['numbers_to'],
-                ],
-            ]);
+    //     $response->assertStatus(200)
+    //         ->assertExactJson([
+    //             'data' => [
+    //                 'id' => $lottery->id,
+    //                 'name' => $data['name'],
+    //                 'numbers_count' => $data['numbers_count'],
+    //                 'numbers_from' => $data['numbers_from'],
+    //                 'numbers_to' => $data['numbers_to'],
+    //             ],
+    //         ]);
 
-        $this->assertFalse($lottery->codes()->exists());
-    }
+    //     $this->assertFalse($lottery->codes()->exists());
+    // }
 
-    public function test_lottery_codes_delete_on_lottery_numbers_from_field_updating()
-    {
-        $lottery = Lottery::all()->random();
+    // public function test_lottery_codes_delete_on_lottery_numbers_from_field_updating()
+    // {
+    //     $lottery = Lottery::all()->random();
 
-        $data = $lottery->toArray();
-        $data['numbers_from'] -= 1;
+    //     $data = $lottery->toArray();
+    //     $data['numbers_from'] -= 1;
 
-        $response = $this->putJson(Route('lottery.update', $lottery), $data);
+    //     $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
-        $response->assertStatus(200)
-            ->assertExactJson([
-                'data' => [
-                    'id' => $lottery->id,
-                    'name' => $data['name'],
-                    'numbers_count' => $data['numbers_count'],
-                    'numbers_from' => $data['numbers_from'],
-                    'numbers_to' => $data['numbers_to'],
-                ],
-            ]);
+    //     $response->assertStatus(200)
+    //         ->assertExactJson([
+    //             'data' => [
+    //                 'id' => $lottery->id,
+    //                 'name' => $data['name'],
+    //                 'numbers_count' => $data['numbers_count'],
+    //                 'numbers_from' => $data['numbers_from'],
+    //                 'numbers_to' => $data['numbers_to'],
+    //             ],
+    //         ]);
 
-        $this->assertFalse($lottery->codes()->exists());
-    }
+    //     $this->assertFalse($lottery->codes()->exists());
+    // }
 
-    public function test_lottery_codes_delete_on_lottery_numbers_to_field_updating()
-    {
-        $lottery = Lottery::all()->random();
+    // public function test_lottery_codes_delete_on_lottery_numbers_to_field_updating()
+    // {
+    //     $lottery = Lottery::all()->random();
 
-        $data = $lottery->toArray();
-        $data['numbers_to'] += 1;
+    //     $data = $lottery->toArray();
+    //     $data['numbers_to'] += 1;
 
-        $response = $this->putJson(Route('lottery.update', $lottery), $data);
+    //     $response = $this->putJson(Route('lottery.update', $lottery), $data);
 
-        $response->assertStatus(200)
-            ->assertExactJson([
-                'data' => [
-                    'id' => $lottery->id,
-                    'name' => $data['name'],
-                    'numbers_count' => $data['numbers_count'],
-                    'numbers_from' => $data['numbers_from'],
-                    'numbers_to' => $data['numbers_to'],
-                ],
-            ]);
+    //     $response->assertStatus(200)
+    //         ->assertExactJson([
+    //             'data' => [
+    //                 'id' => $lottery->id,
+    //                 'name' => $data['name'],
+    //                 'numbers_count' => $data['numbers_count'],
+    //                 'numbers_from' => $data['numbers_from'],
+    //                 'numbers_to' => $data['numbers_to'],
+    //             ],
+    //         ]);
 
-        $this->assertFalse($lottery->codes()->exists());
-    }
+    //     $this->assertFalse($lottery->codes()->exists());
+    // }
 
-    public function test_lottery_codes_delete_after_lottery_deleted()
-    {
-        $lottery = Lottery::all()->random();
+    // public function test_lottery_codes_delete_after_lottery_deleted()
+    // {
+    //     $lottery = Lottery::all()->random();
 
-        $response = $this->deleteJson(Route('lottery.destroy', $lottery));
+    //     $response = $this->deleteJson(Route('lottery.destroy', $lottery));
 
-        $response->assertStatus(200)
-            ->assertExactJson([1]);
+    //     $response->assertStatus(200)
+    //         ->assertExactJson([1]);
 
-        $this->assertModelMissing($lottery);
-        $this->assertFalse($lottery->codes()->exists());
-    }
+    //     $this->assertModelMissing($lottery);
+    //     $this->assertFalse($lottery->codes()->exists());
+    // }
 
     public function test_cache_deleted_after_lottery_created()
     {
