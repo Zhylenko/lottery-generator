@@ -17,7 +17,7 @@ class LotteryCodeResource extends JsonResource
         return [
             'id' => $this->id,
             'code' => $this->code,
-            'lottery' => new LotteryResource($this->lotteries->first()),
+            'lottery' => new LotteryResource($this->lotteries()->first()),
         ];
     }
 }

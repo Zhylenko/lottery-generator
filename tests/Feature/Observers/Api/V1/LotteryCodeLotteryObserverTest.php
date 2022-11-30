@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Observers\Api\V1;
 
+use App\Models\Api\V1\Code;
 use App\Models\Api\V1\Lottery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -32,7 +33,7 @@ class LotteryCodeLotteryObserverTest extends TestCase
                 ],
             ]);
 
-        $this->assertFalse($lottery->codes()->exists());
+        $this->assertFalse(Code::whereRelation('lotteries', 'lottery_id', $lottery->id)->exists());
     }
 
     public function test_lottery_codes_deleted_on_lottery_numbers_from_field_updating()
@@ -55,7 +56,7 @@ class LotteryCodeLotteryObserverTest extends TestCase
                 ],
             ]);
 
-        $this->assertFalse($lottery->codes()->exists());
+        $this->assertFalse(Code::whereRelation('lotteries', 'lottery_id', $lottery->id)->exists());
     }
 
     public function test_lottery_codes_deleted_on_lottery_numbers_to_field_updating()
@@ -78,7 +79,7 @@ class LotteryCodeLotteryObserverTest extends TestCase
                 ],
             ]);
 
-        $this->assertFalse($lottery->codes()->exists());
+        $this->assertFalse(Code::whereRelation('lotteries', 'lottery_id', $lottery->id)->exists());
     }
 
     public function test_lottery_codes_deleted_after_lottery_deleted()
@@ -91,7 +92,7 @@ class LotteryCodeLotteryObserverTest extends TestCase
             ->assertExactJson([1]);
 
         $this->assertModelMissing($lottery);
-        $this->assertFalse($lottery->codes()->exists());
+        $this->assertFalse(Code::whereRelation('lotteries', 'lottery_id', $lottery->id)->exists());
     }
 
     public function test_cache_deleted_after_lottery_created()

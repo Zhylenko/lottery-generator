@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Api\V1\Code;
 use App\Models\Api\V1\Lottery;
 use App\Observers\Api\V1\CodeObserver;
+use App\Observers\Api\V1\LotteryCodeCodeObserver;
 use App\Observers\Api\V1\LotteryCodeLotteryObserver;
 use App\Observers\Api\V1\LotteryObserver;
 use Illuminate\Auth\Events\Registered;
@@ -32,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         Code::class => [
             CodeObserver::class,
+            LotteryCodeCodeObserver::class,
         ],
     ];
 
