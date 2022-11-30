@@ -80,4 +80,23 @@ class CodeObserverTest extends TestCase
 
         $this->assertFalse(Cache::tags(['codes'])->has('page_' . $page));
     }
+
+    public function test_cache_deleted_after_code_deleted()
+    {
+        $page = 1;
+        $uri = Route('code.index', ['page' => $page]);
+
+        $this->getJson($uri);
+        $this->assertTrue(Cache::tags(['codes'])->has('page_' . $page));
+
+        $code = Code::all()->random();
+
+        $response = $this->deleteJson(Route('code.destroy', $code));
+
+        $response->assertStatus(200)
+            ->assertExactJson([1]);
+        $this->assertModelMissing($code);
+
+        $this->assertFalse(Cache::tags(['codes'])->has('page_' . $page));
+    }
 }
