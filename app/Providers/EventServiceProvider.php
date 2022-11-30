@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Api\V1\Code;
 use App\Models\Api\V1\Lottery;
 use App\Observers\Api\V1\CodeObserver;
+use App\Observers\Api\V1\LotteryCodeLotteryObserver;
 use App\Observers\Api\V1\LotteryObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -27,6 +28,7 @@ class EventServiceProvider extends ServiceProvider
     protected $observers = [
         Lottery::class => [
             LotteryObserver::class,
+            LotteryCodeLotteryObserver::class,
         ],
         Code::class => [
             CodeObserver::class,
