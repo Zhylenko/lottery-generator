@@ -16,4 +16,9 @@ class Code extends Model
     protected $fillable = [
         'code',
     ];
+
+    public function lotteries()
+    {
+        return $this->belongsToMany(Lottery::class, 'lottery_code');
+    }
 }

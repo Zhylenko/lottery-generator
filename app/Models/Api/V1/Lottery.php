@@ -15,4 +15,9 @@ class Lottery extends Model
         'numbers_from',
         'numbers_to',
     ];
+
+    public function codes()
+    {
+        return $this->belongsToMany(Code::class, 'lottery_code')->withTimestamps();
+    }
 }

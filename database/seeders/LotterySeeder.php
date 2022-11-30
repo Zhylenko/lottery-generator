@@ -44,6 +44,6 @@ class LotterySeeder extends Seeder
             ]);
         }
 
-        Lottery::factory(100)->create();
+        Lottery::factory(4)->create();
     }
 }
