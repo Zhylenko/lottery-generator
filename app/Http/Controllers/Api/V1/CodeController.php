@@ -78,6 +78,6 @@ class CodeController extends Controller
      */
     public function destroy(Code $code)
     {
-        //
+        return $code->delete();
     }
 }

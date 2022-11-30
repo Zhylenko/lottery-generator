@@ -81,4 +81,16 @@ class CodeControllerTest extends TestCase
                 ],
             ]);
     }
+
+    public function test_destroy_code()
+    {
+        $code = Code::all()->random();
+
+        $response = $this->deleteJson(Route('code.destroy', $code));
+
+        $response->assertStatus(200)
+            ->assertExactJson([1]);
+
+        $this->assertModelMissing($code);
+    }
 }
