@@ -120,4 +120,30 @@ class LotteryCodeControllerTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_store_lottery_code()
+    {
+        $lottery = Lottery::inRandomOrder()->first();
+        // $data = Code::factory()->make()->toArray();
+        $data = ['code' => []];
+        for ($i = 0; $i < $lottery->numbers_count; $i++) {
+            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
+        }
+
+        $response = $this->postJson(Route('lottery.code.store', $lottery), $data);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    'code' => $data['code'],
+                    'lottery' => [
+                        'id' => $lottery->id,
+                        'name' => $lottery->name,
+                        'numbers_count' => $lottery->numbers_count,
+                        'numbers_from' => $lottery->numbers_from,
+                        'numbers_to' => $lottery->numbers_to,
+                    ],
+                ],
+            ]);
+    }
 }

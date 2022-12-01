@@ -3,6 +3,7 @@
 namespace Tests\Feature\Observers\Api\V1;
 
 use App\Models\Api\V1\Code;
+use App\Models\Api\V1\Lottery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
@@ -87,6 +88,28 @@ class LotteryCodeCodeObserverTest extends TestCase
         $response->assertStatus(200)
             ->assertExactJson([1]);
         $this->assertModelMissing($code);
+
+        $this->assertFalse(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
+    }
+
+    public function test_cache_deleted_after_lottery_code_created()
+    {
+        $page = 1;
+        $uri = Route('lottery.code.index', ['page' => $page]);
+
+        $this->getJson($uri);
+        $this->assertTrue(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
+
+        $lottery = Lottery::inRandomOrder()->first();
+        // $data = Code::factory()->make()->toArray();
+        $data = ['code' => []];
+        for ($i = 0; $i < $lottery->numbers_count; $i++) {
+            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
+        }
+
+        $response = $this->postJson(Route('lottery.code.store', $lottery), $data);
+
+        $response->assertStatus(201);
 
         $this->assertFalse(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
     }

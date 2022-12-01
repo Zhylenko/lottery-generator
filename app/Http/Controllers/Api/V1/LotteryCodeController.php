@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\StoreLotteryCodeRequest;
 use App\Http\Resources\Api\V1\LotteryCodeCollection;
 use App\Http\Resources\Api\V1\LotteryCodeResource;
 use App\Models\Api\V1\Code;
@@ -47,9 +48,13 @@ class LotteryCodeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLotteryCodeRequest $request, Lottery $lottery)
     {
-        //
+        $lotteryCode = $lottery->codes()->create([
+            'code' => $request->code,
+        ]);
+
+        return new LotteryCodeResource($lotteryCode);
     }
 
     /**
