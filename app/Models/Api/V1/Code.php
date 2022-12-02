@@ -19,6 +19,6 @@ class Code extends Model
 
     public function lotteries()
     {
-        return $this->belongsToMany(Lottery::class, 'lottery_code');
+        return $this->belongsToMany(Lottery::class, 'lottery_code')->withTimestamps();
     }
 }

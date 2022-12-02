@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreLotteryCodeRequest;
+use App\Http\Requests\Api\V1\UpdateLotteryCodeRequest;
 use App\Http\Resources\Api\V1\LotteryCodeCollection;
 use App\Http\Resources\Api\V1\LotteryCodeResource;
 use App\Models\Api\V1\Code;
@@ -77,9 +78,15 @@ class LotteryCodeController extends Controller
      * @param  \App\Models\Api\V1\Code  $lotteryCode
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Code $lotteryCode)
+    public function update(UpdateLotteryCodeRequest $request, Code $code)
     {
-        //
+        $code->update([
+            'code' => $request->code,
+        ]);
+
+        $code->lotteries()->sync($request->lottery);
+
+        return $this->show($code);
     }
 
     /**
@@ -88,7 +95,7 @@ class LotteryCodeController extends Controller
      * @param  \App\Models\Api\V1\Code  $lotteryCode
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Code $lotteryCode)
+    public function destroy(Code $code)
     {
         //
     }

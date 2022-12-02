@@ -146,4 +146,68 @@ class LotteryCodeControllerTest extends TestCase
                 ],
             ]);
     }
+
+    public function test_update_lottery_code_code()
+    {
+        $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
+        $lottery = $lotteryCode->lotteries()->first();
+        // $data = Code::factory()->make()->toArray();
+        $data = ['code' => []];
+        for ($i = 0; $i < $lottery->numbers_count; $i++) {
+            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
+        }
+
+        $data['lottery'] = $lottery->id;
+
+        $response = $this->putJson(Route('lottery.code.update', $lotteryCode), $data);
+
+        $response->assertStatus(200)
+            ->assertExactJson([
+                'data' => [
+                    'id' => $lotteryCode->id,
+                    'code' => $data['code'],
+                    'lottery' => [
+                        'id' => $lottery->id,
+                        'name' => $lottery->name,
+                        'numbers_count' => $lottery->numbers_count,
+                        'numbers_from' => $lottery->numbers_from,
+                        'numbers_to' => $lottery->numbers_to,
+                    ],
+                ],
+            ]);
+    }
+
+    public function test_update_lottery_code_lottery()
+    {
+        $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
+        $codeLottery = $lotteryCode->lotteries()->first();
+
+        $lottery = Lottery::has('codes')->whereRelation('codes', 'code_id', '!=', $lotteryCode->id)->where('id', '!=', $codeLottery->id)->inRandomOrder()->first();
+        // $data = Code::factory()->make()->toArray();
+        $data = ['code' => []];
+        for ($i = 0; $i < $lottery->numbers_count; $i++) {
+            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
+        }
+
+        $data['lottery'] = $lottery->id;
+
+        $response = $this->putJson(Route('lottery.code.update', $lotteryCode), $data);
+
+        $response->assertStatus(200)
+            ->assertExactJson([
+                'data' => [
+                    'id' => $lotteryCode->id,
+                    'code' => $data['code'],
+                    'lottery' => [
+                        'id' => $lottery->id,
+                        'name' => $lottery->name,
+                        'numbers_count' => $lottery->numbers_count,
+                        'numbers_from' => $lottery->numbers_from,
+                        'numbers_to' => $lottery->numbers_to,
+                    ],
+                ],
+            ]);
+
+        $this->assertFalse($codeLottery->codes()->where('codes.id', $lotteryCode->id)->exists());
+    }
 }
