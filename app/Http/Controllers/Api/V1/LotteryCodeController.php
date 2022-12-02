@@ -97,6 +97,8 @@ class LotteryCodeController extends Controller
      */
     public function destroy(Code $code)
     {
-        //
+        $lotteryCode = Code::has('lotteries')->findOrFail($code->id);
+
+        return $lotteryCode->delete();
     }
 }

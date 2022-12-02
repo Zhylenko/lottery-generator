@@ -145,4 +145,31 @@ class LotteryCodeLotteryObserverTest extends TestCase
 
         $this->assertFalse(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
     }
+
+    public function test_cache_deleted_after_lottery_code_lottery_updated()
+    {
+        $page = 1;
+        $uri = Route('lottery.code.index', ['page' => $page]);
+
+        $this->getJson($uri);
+        $this->assertTrue(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
+
+        $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
+        $codeLottery = $lotteryCode->lotteries()->first();
+
+        $lottery = Lottery::has('codes')->whereRelation('codes', 'code_id', '!=', $lotteryCode->id)->where('id', '!=', $codeLottery->id)->inRandomOrder()->first();
+        // $data = Code::factory()->make()->toArray();
+        $data = ['code' => []];
+        for ($i = 0; $i < $lottery->numbers_count; $i++) {
+            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
+        }
+
+        $data['lottery'] = $lottery->id;
+
+        $response = $this->putJson(Route('lottery.code.update', $lotteryCode), $data);
+
+        $response->assertStatus(200);
+
+        $this->assertFalse(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
+    }
 }

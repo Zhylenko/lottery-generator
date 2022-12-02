@@ -210,4 +210,27 @@ class LotteryCodeControllerTest extends TestCase
 
         $this->assertFalse($codeLottery->codes()->where('codes.id', $lotteryCode->id)->exists());
     }
+
+    public function test_destroy_lottery_code()
+    {
+        $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
+
+        $response = $this->deleteJson(Route('lottery.code.destroy', $lotteryCode));
+
+        $response->assertStatus(200)
+            ->assertExactJson([1]);
+
+        $this->assertModelMissing($lotteryCode);
+    }
+
+    public function test_destroy_not_lottery_code_not_found_error()
+    {
+        $lotteryCode = Code::doesntHave('lotteries')->inRandomOrder()->first();
+
+        $response = $this->deleteJson(Route('lottery.code.destroy', $lotteryCode));
+
+        $response->assertStatus(404);
+
+        $this->assertModelExists($lotteryCode);
+    }
 }

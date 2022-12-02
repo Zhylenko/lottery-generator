@@ -113,4 +113,49 @@ class LotteryCodeCodeObserverTest extends TestCase
 
         $this->assertFalse(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
     }
+
+    public function test_cache_deleted_after_lottery_code_updated()
+    {
+        $page = 1;
+        $uri = Route('lottery.code.index', ['page' => $page]);
+
+        $this->getJson($uri);
+        $this->assertTrue(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
+
+        $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
+        $lottery = $lotteryCode->lotteries()->first();
+        // $data = Code::factory()->make()->toArray();
+        $data = ['code' => []];
+        for ($i = 0; $i < $lottery->numbers_count; $i++) {
+            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
+        }
+
+        $data['lottery'] = $lottery->id;
+
+        $response = $this->putJson(Route('lottery.code.update', $lotteryCode), $data);
+
+        $response->assertStatus(200);
+
+        $this->assertFalse(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
+    }
+
+    public function test_cache_deleted_after_lottery_code_deleted()
+    {
+        $page = 1;
+        $uri = Route('lottery.code.index', ['page' => $page]);
+
+        $this->getJson($uri);
+        $this->assertTrue(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
+
+        $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
+
+        $response = $this->deleteJson(Route('lottery.code.destroy', $lotteryCode));
+
+        $response->assertStatus(200)
+            ->assertExactJson([1]);
+
+        $this->assertModelMissing($lotteryCode);
+
+        $this->assertFalse(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
+    }
 }
