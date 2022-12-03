@@ -60,4 +60,18 @@ class SpecialCodeControllerTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_store_code()
+    {
+        $data = Code::factory()->make()->toArray();
+
+        $response = $this->postJson(Route('code.special.store'), $data);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    'code' => $data['code'],
+                ],
+            ]);
+    }
 }

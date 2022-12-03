@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\V1\CodeCollection;
-use App\Http\Resources\Api\V1\CodeResource;
+use App\Http\Requests\Api\V1\StoreCodeRequest;
+use App\Http\Resources\Api\V1\SpecialCodeCollection;
+use App\Http\Resources\Api\V1\SpecialCodeResource;
 use App\Models\Api\V1\Code;
 use App\Models\Api\V1\SpecialCode;
 use Carbon\Carbon;
@@ -20,22 +21,26 @@ class SpecialCodeController extends Controller
      */
     public function index(Request $request)
     {
-        $specialCodes =  Cache::tags(['codes', 'special'])->remember('page_' . $request->get('page', 1), Carbon::now()->addDay(), function () {
-            return Code::has('special')->orderBy('id', 'desc')->paginate(15);
+        $specialCodes = Cache::tags(['codes', 'special'])->remember('page_' . $request->get('page', 1), Carbon::now()->addDay(), function () {
+            return SpecialCode::has('code')->orderBy('code_id', 'desc')->paginate(15);
         });
 
-        return new CodeCollection($specialCodes);
+        return new SpecialCodeCollection($specialCodes);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\StoreCodeRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCodeRequest $request)
     {
-        //
+        $specialCode = Code::create([
+            'code' => $request->code,
+        ])->special()->create();
+
+        return new SpecialCodeResource($specialCode);
     }
 
     /**
@@ -46,9 +51,9 @@ class SpecialCodeController extends Controller
      */
     public function show(Code $code)
     {
-        $specialCode = Code::has('special')->findOrFail($code->id);
+        $specialCode = SpecialCode::whereRelation('code', 'id', $code->id)->firstOrFail();
 
-        return new CodeResource($specialCode);
+        return new SpecialCodeResource($specialCode);
     }
 
     /**
