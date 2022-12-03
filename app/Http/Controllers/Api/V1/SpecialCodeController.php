@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreCodeRequest;
+use App\Http\Requests\Api\V1\UpdateCodeRequest;
 use App\Http\Resources\Api\V1\SpecialCodeCollection;
 use App\Http\Resources\Api\V1\SpecialCodeResource;
 use App\Models\Api\V1\Code;
@@ -59,13 +60,19 @@ class SpecialCodeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Api\V1\SpecialCode  $specialCode
+     * @param  \Illuminate\Http\UpdateCodeRequest  $request
+     * @param  \App\Models\Api\V1\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SpecialCode $specialCode)
+    public function update(UpdateCodeRequest $request, Code $code)
     {
-        //
+        $specialCode = SpecialCode::whereRelation('code', 'id', $code->id)->firstOrFail();
+
+        $specialCode->code()->update([
+            'code' => $request->code,
+        ]);
+
+        return $this->show($specialCode->code);
     }
 
     /**

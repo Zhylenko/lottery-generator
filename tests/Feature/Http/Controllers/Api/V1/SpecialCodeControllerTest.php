@@ -61,7 +61,7 @@ class SpecialCodeControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_store_code()
+    public function test_store_special_code()
     {
         $data = Code::factory()->make()->toArray();
 
@@ -73,5 +73,31 @@ class SpecialCodeControllerTest extends TestCase
                     'code' => $data['code'],
                 ],
             ]);
+    }
+
+    public function test_update_special_code()
+    {
+        $specialCode = Code::has('special')->inRandomOrder()->first();
+        $data = Code::factory()->make()->toArray();
+
+        $response = $this->putJson(Route('code.special.update', $specialCode), $data);
+
+        $response->assertStatus(200)
+            ->assertExactJson([
+                'data' => [
+                    'id' => $specialCode->id,
+                    'code' => $data['code'],
+                ],
+            ]);
+    }
+
+    public function test_update_not_special_code_not_found_error()
+    {
+        $code = Code::doesntHave('special')->inRandomOrder()->first();
+        $data = Code::factory()->make()->toArray();
+
+        $response = $this->putJson(Route('code.special.update', $code), $data);
+
+        $response->assertStatus(404);
     }
 }
