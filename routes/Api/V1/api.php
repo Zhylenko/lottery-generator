@@ -13,44 +13,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(App\Http\Controllers\Api\V1\LotteryCodeController::class)
-    ->prefix('lotteries')
-    ->name('lottery.code')
-    ->group(function () {
-        Route::get('/codes', 'index')
-            ->name('.index');
-        Route::get('/{lottery}/codes', 'indexByLottery')
-            ->name('.lottery.index');
-        Route::get('/codes/{code}', 'show')
-            ->name('.show');
-        Route::post('/{lottery}/codes', 'store')
-            ->name('.store');
-        Route::put('/codes/{code}', 'update')
-            ->name('.update');
-        Route::delete('/codes/{code}', 'destroy')
-            ->name('.destroy');
-    });
-
-Route::controller(App\Http\Controllers\Api\V1\SpecialCodeController::class)
-    ->prefix('codes/special')
-    ->name('code.special')
-    ->group(function () {
-        Route::get('/', 'index')
-            ->name('.index');
-        Route::get('/{code}', 'show')
-            ->name('.show');
-        Route::post('/', 'store')
-            ->name('.store');
-        Route::put('/{code}', 'update')
-            ->name('.update');
-        Route::delete('/{code}', 'destroy')
-            ->name('.destroy');
-    });
-
 Route::controller(App\Http\Controllers\Api\V1\LotteryController::class)
     ->prefix('lotteries')
     ->name('lottery')
     ->group(function () {
+
+        Route::controller(App\Http\Controllers\Api\V1\LotteryCodeController::class)
+            ->name('.code')
+            ->group(function () {
+                Route::get('/codes', 'index')
+                    ->name('.index');
+                Route::get('/{lottery}/codes', 'indexByLottery')
+                    ->name('.lottery.index');
+                Route::get('/codes/{code}', 'show')
+                    ->name('.show');
+                Route::post('/{lottery}/codes', 'store')
+                    ->name('.store');
+                Route::put('/codes/{code}', 'update')
+                    ->name('.update');
+                Route::delete('/codes/{code}', 'destroy')
+                    ->name('.destroy');
+            });
+
         Route::get('/', 'index')
             ->name('.index');
         Route::get('/{lottery}', 'show')
@@ -67,6 +51,23 @@ Route::controller(App\Http\Controllers\Api\V1\CodeController::class)
     ->prefix('codes')
     ->name('code')
     ->group(function () {
+
+        Route::controller(App\Http\Controllers\Api\V1\SpecialCodeController::class)
+            ->prefix('special')
+            ->name('.special')
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->name('.index');
+                Route::get('/{code}', 'show')
+                    ->name('.show');
+                Route::post('/', 'store')
+                    ->name('.store');
+                Route::put('/{code}', 'update')
+                    ->name('.update');
+                Route::delete('/{code}', 'destroy')
+                    ->name('.destroy');
+            });
+
         Route::get('/', 'index')
             ->name('.index');
         Route::get('/{code}', 'show')
