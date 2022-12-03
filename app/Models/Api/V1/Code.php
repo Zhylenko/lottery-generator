@@ -21,4 +21,9 @@ class Code extends Model
     {
         return $this->belongsToMany(Lottery::class, 'lottery_code')->withTimestamps();
     }
+
+    public function special()
+    {
+        return $this->hasOne(SpecialCode::class);
+    }
 }

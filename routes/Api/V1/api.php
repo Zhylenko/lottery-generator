@@ -31,6 +31,22 @@ Route::controller(App\Http\Controllers\Api\V1\LotteryCodeController::class)
             ->name('.destroy');
     });
 
+Route::controller(App\Http\Controllers\Api\V1\SpecialCodeController::class)
+    ->prefix('codes/special')
+    ->name('code.special')
+    ->group(function () {
+        Route::get('/', 'index')
+            ->name('.index');
+        Route::get('/{code}', 'show')
+            ->name('.show');
+        Route::post('/', 'store')
+            ->name('.store');
+        Route::put('/{code}', 'update')
+            ->name('.update');
+        Route::delete('/{code}', 'destroy')
+            ->name('.destroy');
+    });
+
 Route::controller(App\Http\Controllers\Api\V1\LotteryController::class)
     ->prefix('lotteries')
     ->name('lottery')

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             LotterySeeder::class,
             CodeSeeder::class,
             LotteryCodeSeeder::class,
+            SpecialCodeSeeder::class,
         ]);
     }
 }
