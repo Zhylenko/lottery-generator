@@ -18,39 +18,61 @@ Route::controller(App\Http\Controllers\Api\V1\LotteryController::class)
     ->name('lottery')
     ->group(function () {
 
+        Route::get('/', 'index')
+            ->name('.index');
+        Route::get('/{lottery}', 'show')
+            ->whereNumber('lottery')
+            ->name('.show');
+        Route::post('/', 'store')
+            ->name('.store');
+        Route::put('/{lottery}', 'update')
+            ->whereNumber('lottery')
+            ->name('.update');
+        Route::delete('/{lottery}', 'destroy')
+            ->whereNumber('lottery')
+            ->name('.destroy');
+
         Route::controller(App\Http\Controllers\Api\V1\LotteryCodeController::class)
             ->name('.code')
             ->group(function () {
                 Route::get('/codes', 'index')
                     ->name('.index');
                 Route::get('/{lottery}/codes', 'indexByLottery')
+                    ->whereNumber('lottery')
                     ->name('.lottery.index');
                 Route::get('/codes/{code}', 'show')
+                    ->whereNumber('code')
                     ->name('.show');
                 Route::post('/{lottery}/codes', 'store')
+                    ->whereNumber('lottery')
                     ->name('.store');
                 Route::put('/codes/{code}', 'update')
+                    ->whereNumber('code')
                     ->name('.update');
                 Route::delete('/codes/{code}', 'destroy')
+                    ->whereNumber('code')
                     ->name('.destroy');
             });
-
-        Route::get('/', 'index')
-            ->name('.index');
-        Route::get('/{lottery}', 'show')
-            ->name('.show');
-        Route::post('/', 'store')
-            ->name('.store');
-        Route::put('/{lottery}', 'update')
-            ->name('.update');
-        Route::delete('/{lottery}', 'destroy')
-            ->name('.destroy');
     });
 
 Route::controller(App\Http\Controllers\Api\V1\CodeController::class)
     ->prefix('codes')
     ->name('code')
     ->group(function () {
+
+        Route::get('/', 'index')
+            ->name('.index');
+        Route::get('/{code}', 'show')
+            ->whereNumber('code')
+            ->name('.show');
+        Route::post('/', 'store')
+            ->name('.store');
+        Route::put('/{code}', 'update')
+            ->whereNumber('code')
+            ->name('.update');
+        Route::delete('/{code}', 'destroy')
+            ->whereNumber('code')
+            ->name('.destroy');
 
         Route::controller(App\Http\Controllers\Api\V1\SpecialCodeController::class)
             ->prefix('special')
@@ -59,23 +81,15 @@ Route::controller(App\Http\Controllers\Api\V1\CodeController::class)
                 Route::get('/', 'index')
                     ->name('.index');
                 Route::get('/{code}', 'show')
+                    ->whereNumber('code')
                     ->name('.show');
                 Route::post('/', 'store')
                     ->name('.store');
                 Route::put('/{code}', 'update')
+                    ->whereNumber('code')
                     ->name('.update');
                 Route::delete('/{code}', 'destroy')
+                    ->whereNumber('code')
                     ->name('.destroy');
             });
-
-        Route::get('/', 'index')
-            ->name('.index');
-        Route::get('/{code}', 'show')
-            ->name('.show');
-        Route::post('/', 'store')
-            ->name('.store');
-        Route::put('/{code}', 'update')
-            ->name('.update');
-        Route::delete('/{code}', 'destroy')
-            ->name('.destroy');
     });
