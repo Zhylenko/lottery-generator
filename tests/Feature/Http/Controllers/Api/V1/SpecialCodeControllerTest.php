@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Api\V1;
 
 use App\Models\Api\V1\Code;
+use App\Models\Api\V1\SpecialCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
@@ -97,6 +98,29 @@ class SpecialCodeControllerTest extends TestCase
         $data = Code::factory()->make()->toArray();
 
         $response = $this->putJson(Route('code.special.update', $code), $data);
+
+        $response->assertStatus(404);
+    }
+
+    public function test_destroy_special_code()
+    {
+        $specialCode = SpecialCode::has('code')->inRandomOrder()->first();
+        $code = $specialCode->code;
+
+        $response = $this->deleteJson(Route('code.special.destroy', $code));
+
+        $response->assertStatus(200)
+            ->assertExactJson([1]);
+
+        $this->assertModelMissing($code);
+        $this->assertModelMissing($specialCode);
+    }
+
+    public function test_destroy_not_special_code_not_found_error()
+    {
+        $code = Code::doesntHave('special')->inRandomOrder()->first();
+
+        $response = $this->deleteJson(Route('code.special.destroy', $code));
 
         $response->assertStatus(404);
     }

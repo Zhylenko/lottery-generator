@@ -68,7 +68,7 @@ class SpecialCodeController extends Controller
     {
         $specialCode = SpecialCode::whereRelation('code', 'id', $code->id)->firstOrFail();
 
-        $specialCode->code()->update([
+        $specialCode->code->update([
             'code' => $request->code,
         ]);
 
@@ -78,11 +78,13 @@ class SpecialCodeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Api\V1\SpecialCode  $specialCode
+     * @param  \App\Models\Api\V1\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SpecialCode $specialCode)
+    public function destroy(Code $code)
     {
-        //
+        $specialCode = SpecialCode::whereRelation('code', 'id', $code->id)->firstOrFail();
+
+        return $specialCode->delete();
     }
 }

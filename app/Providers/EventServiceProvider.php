@@ -4,10 +4,13 @@ namespace App\Providers;
 
 use App\Models\Api\V1\Code;
 use App\Models\Api\V1\Lottery;
+use App\Models\Api\V1\SpecialCode;
 use App\Observers\Api\V1\CodeObserver;
 use App\Observers\Api\V1\LotteryCodeCodeObserver;
 use App\Observers\Api\V1\LotteryCodeLotteryObserver;
 use App\Observers\Api\V1\LotteryObserver;
+use App\Observers\Api\V1\SpecialCodeCodeObserver;
+use App\Observers\Api\V1\SpecialCodeObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -34,6 +37,10 @@ class EventServiceProvider extends ServiceProvider
         Code::class => [
             CodeObserver::class,
             LotteryCodeCodeObserver::class,
+            SpecialCodeCodeObserver::class,
+        ],
+        SpecialCode::class => [
+            SpecialCodeObserver::class,
         ],
     ];
 

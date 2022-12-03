@@ -15,7 +15,7 @@ Change data  in **.env.testing** file.
 ```
 php artisan key:generate --env=testing
 php artisan optimize:clear --env=testing
-php artisan test
+php artisan test -p
 ```
 
 ### Set up **.env**
