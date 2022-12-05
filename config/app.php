@@ -195,6 +195,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\Api\V1\CodeServiceProvider::class,
+        App\Providers\Api\V1\LotteryCodeServiceProvider::class,
     ],
 
     /*
@@ -210,6 +211,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'CodeService' => App\Facades\Api\V1\CodeService::class,
+        'LotteryCodeService' => App\Facades\Api\V1\LotteryCodeService::class,
     ])->toArray(),
 
 ];
