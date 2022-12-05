@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GenerateLotteryCodeRequest extends FormRequest
+class GenerateLotteryCodeGeneratedRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
