@@ -64,4 +64,85 @@ class CodeServiceTest extends TestCase
         $this->assertCount(2, $code);
         $this->assertEquals([1, 1], $code);
     }
+
+    public function test_get_all_code_combinations()
+    {
+        $code = [1, 2, 3];
+        $combinations = $this->codeService->getAllCodeCombinations($code);
+
+        $this->assertEquals([
+            1 => [
+                [1],
+                [2],
+                [3],
+            ],
+            2 => [
+                [1, 2],
+                [1, 3],
+                [2, 3],
+            ],
+            3 => [
+                [1, 2, 3],
+            ],
+        ], $combinations);
+    }
+
+    public function test_get_all_not_distinct_code_combinations()
+    {
+        $code = [1, 2, 1];
+        $combinations = $this->codeService->getAllCodeCombinations($code);
+
+        $this->assertEquals([
+            1 => [
+                [1],
+                [2],
+            ],
+            2 => [
+                [1, 1],
+                [1, 2],
+            ],
+            3 => [
+                [1, 1, 2],
+            ],
+        ], $combinations);
+    }
+
+    public function test_get_size_code_combinations()
+    {
+        $code = [1, 2, 3];
+        $combinations = $this->codeService->getSizeCodeCombinations($code, 1);
+
+        $this->assertEquals([
+            [1],
+            [2],
+            [3],
+        ], $combinations);
+    }
+
+    public function test_get_size_not_distinct_code_combinations()
+    {
+        $code = [1, 2, 1];
+        $combinations = $this->codeService->getSizeCodeCombinations($code, 1);
+
+        $this->assertEquals([
+            [1],
+            [2],
+        ], $combinations);
+    }
+
+    public function test_get_size_less_than_one_empty_combinations()
+    {
+        $code = [1, 2, 3];
+        $combinations = $this->codeService->getSizeCodeCombinations($code, 0);
+
+        $this->assertEquals([], $combinations);
+    }
+
+    public function test_get_size_greater_than_code_numbers_count_empty_combinations()
+    {
+        $code = [1, 2, 3];
+        $combinations = $this->codeService->getSizeCodeCombinations($code, 4);
+
+        $this->assertEquals([], $combinations);
+    }
 }
