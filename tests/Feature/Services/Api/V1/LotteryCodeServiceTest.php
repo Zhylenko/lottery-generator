@@ -12,6 +12,8 @@ use Tests\TestCase;
 
 class LotteryCodeServiceTest extends TestCase
 {
+    use RefreshDatabase;
+
     private LotteryCode $lotteryCodeService;
 
     public function setUp(): void
@@ -73,5 +75,17 @@ class LotteryCodeServiceTest extends TestCase
         $this->assertIsArray($code);
         $this->assertCount($lottery->numbers_count, $code);
         $this->assertTrue($codeCollection->duplicates()->isNotEmpty());
+    }
+
+    public function test_store_lottery_code_generated()
+    {
+        $lottery = Lottery::inRandomOrder()->first();
+        $code =  $this->lotteryCodeService->generateLotteryCode($lottery, true);
+
+        $lotteryCode = $this->lotteryCodeService->storeLotteryCode($lottery, $code, true);
+
+        $this->assertModelExists($lotteryCode);
+        $this->assertNotEmpty($lotteryCode->generated);
+        $this->assertModelExists($lotteryCode->generated);
     }
 }
