@@ -2,9 +2,11 @@
 
 namespace App\Jobs\Api\V1;
 
+use App\Contracts\Api\V1\Condition;
 use App\Http\Requests\Api\V1\GenerateLotteryCodeGeneratedRequest;
 use App\Models\Api\V1\Lottery;
 use App\Models\Api\V1\LotteryCode;
+use App\Services\Api\V1\Conditions\Code\CodeCombinationsCondition;
 use App\Services\Api\V1\Conditions\Code\ConsecutiveNumbersCombinationsCondition;
 use App\Services\Api\V1\Conditions\Code\ConsecutiveNumbersCombinationsInGeneratedSetsCondition;
 use App\Services\Api\V1\Conditions\Code\ConsecutiveTwoNumbersCombinationsCondition;
@@ -40,21 +42,48 @@ class GenerateLotteryCodeJob implements ShouldQueue
     {
         $request = $this->request;
         $lottery = Lottery::findOrFail($request['lottery']);
+        $condition = null;
 
         LotteryCode::has('generated')->whereRelation('lottery', 'id', $lottery->id)->delete();
 
-        $firstCondition = new ConsecutiveTwoNumbersCombinationsCondition;
-        $firstCondition
-            ->next(new ConsecutiveNumbersCombinationsCondition)
-            ->next(new SpecialCodeCondition)
-            ->next(new ConsecutiveNumbersCombinationsInGeneratedSetsCondition($lottery));
+        if ($request['include_sets_of_consecutive_2_numbers_combinations'] == false) {
+            $newCondition = new ConsecutiveTwoNumbersCombinationsCondition;
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+        }
 
+        if ($request['exclude_sets_of_consecutive_numbers_combinations'] == true) {
+            $newCondition = new ConsecutiveNumbersCombinationsCondition;
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+        }
+
+        if ($request['exclude_generated_sets_of_consecutive_numbers_combinations'] == true) {
+            $newCondition = new ConsecutiveNumbersCombinationsInGeneratedSetsCondition($lottery);
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+        }
+
+        if ($request['include_special_codes_combinations'] == true) {
+            $newCondition = new SpecialCodeCondition;
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+        }
+
+        foreach ($request['exclude_code_combinations'] as $exclude_code_combination) {
+            $newCondition = new CodeCombinationsCondition(
+                $lottery,
+                $exclude_code_combination['numbers'],
+                $exclude_code_combination['count'],
+                $exclude_code_combination['from'],
+                $exclude_code_combination['to'],
+            );
+
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+        }
 
         for ($i = 0; $i < $request['count']; $i++) {
             do {
                 $code = \LotteryCodeService::generateLotteryCode($lottery, true);
-                $conditionResult = $firstCondition->handle($code);
+                $conditionResult = $condition->handle($code);
             } while ($conditionResult === false);
+
             \LotteryCodeService::storeLotteryCode($lottery, $code, true);
         }
     }
