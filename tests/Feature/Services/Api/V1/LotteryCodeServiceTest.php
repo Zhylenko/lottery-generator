@@ -80,7 +80,7 @@ class LotteryCodeServiceTest extends TestCase
     public function test_store_lottery_code_generated()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        $code =  $this->lotteryCodeService->generateLotteryCode($lottery, true);
+        $code = $this->lotteryCodeService->generateLotteryCode($lottery, true);
 
         $lotteryCode = $this->lotteryCodeService->storeLotteryCode($lottery, $code, true);
 

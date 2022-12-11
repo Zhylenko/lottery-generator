@@ -13,7 +13,7 @@ class CodeCombinationsConditionTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    private Condition $condition;
+    private $conditionClass;
 
     public function setUp(): void
     {
@@ -24,12 +24,23 @@ class CodeCombinationsConditionTest extends TestCase
 
     public function test_handle()
     {
-        $lottery = Lottery::has('codes')->inRandomOrder()->first();
+        $lottery = Lottery::has('codes')
+            ->inRandomOrder()
+            ->first();
 
-        $oldestLotteryCode = $lottery->codes()->oldest('id')->first();
-        $latestLotteryCode = $lottery->codes()->latest('id')->first();
+        $oldestLotteryCode = $lottery
+            ->codes()
+            ->oldest('id')
+            ->first();
+        $latestLotteryCode = $lottery
+            ->codes()
+            ->latest('id')
+            ->first();
 
-        $randomLotteryCode = $lottery->codes()->inRandomOrder()->first();
+        $randomLotteryCode = $lottery
+            ->codes()
+            ->inRandomOrder()
+            ->first();
 
         $data = [
             'numbers' => $lottery->numbers_count,
@@ -48,10 +59,18 @@ class CodeCombinationsConditionTest extends TestCase
 
     public function test_handle_not_in_range_code_not_error()
     {
-        $lottery = Lottery::has('codes')->inRandomOrder()->first();
+        $lottery = Lottery::has('codes')
+            ->inRandomOrder()
+            ->first();
 
-        $oldestLotteryCode = $lottery->codes()->oldest('id')->first();
-        $latestLotteryCode = $lottery->codes()->latest('id')->first();
+        $oldestLotteryCode = $lottery
+            ->codes()
+            ->oldest('id')
+            ->first();
+        $latestLotteryCode = $lottery
+            ->codes()
+            ->latest('id')
+            ->first();
 
         $data = [
             'numbers' => $lottery->numbers_count,

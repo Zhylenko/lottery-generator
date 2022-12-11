@@ -38,14 +38,14 @@ class GenerateLotteryCodeJob implements ShouldQueue
     public function handle()
     {
         $request = $this->request;
+        $lottery = Lottery::findOrFail($request['lottery']);
 
         $firstCondition = new ConsecutiveTwoNumbersCombinationsCondition;
         $firstCondition
             ->next(new ConsecutiveNumbersCombinationsCondition)
             ->next(new SpecialCodeCondition)
-            ->next(new ConsecutiveNumbersCombinationsInGeneratedSetsCondition);
+            ->next(new ConsecutiveNumbersCombinationsInGeneratedSetsCondition($lottery));
 
-        $lottery = Lottery::findOrFail(1);
         $j = 0;
 
         for ($i = 0; $i < $request['count']; $i++) {
