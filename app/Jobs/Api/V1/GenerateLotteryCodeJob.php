@@ -4,6 +4,7 @@ namespace App\Jobs\Api\V1;
 
 use App\Http\Requests\Api\V1\GenerateLotteryCodeGeneratedRequest;
 use App\Models\Api\V1\Lottery;
+use App\Models\Api\V1\LotteryCode;
 use App\Services\Api\V1\Conditions\Code\ConsecutiveNumbersCombinationsCondition;
 use App\Services\Api\V1\Conditions\Code\ConsecutiveNumbersCombinationsInGeneratedSetsCondition;
 use App\Services\Api\V1\Conditions\Code\ConsecutiveTwoNumbersCombinationsCondition;
@@ -40,17 +41,17 @@ class GenerateLotteryCodeJob implements ShouldQueue
         $request = $this->request;
         $lottery = Lottery::findOrFail($request['lottery']);
 
+        LotteryCode::has('generated')->whereRelation('lottery', 'id', $lottery->id)->delete();
+
         $firstCondition = new ConsecutiveTwoNumbersCombinationsCondition;
         $firstCondition
             ->next(new ConsecutiveNumbersCombinationsCondition)
             ->next(new SpecialCodeCondition)
             ->next(new ConsecutiveNumbersCombinationsInGeneratedSetsCondition($lottery));
 
-        $j = 0;
 
         for ($i = 0; $i < $request['count']; $i++) {
             do {
-                $j++;
                 $code = \LotteryCodeService::generateLotteryCode($lottery, true);
                 $conditionResult = $firstCondition->handle($code);
             } while ($conditionResult === false);

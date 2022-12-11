@@ -16,7 +16,9 @@ return new class extends Migration
     {
         Schema::create('lottery_code_generated', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(LotteryCode::class);
+            $table->foreignIdFor(LotteryCode::class)
+                ->references('id')->on('lottery_code')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

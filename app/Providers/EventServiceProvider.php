@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Models\Api\V1\Code;
 use App\Models\Api\V1\Lottery;
+use App\Models\Api\V1\LotteryCode;
 use App\Models\Api\V1\SpecialCode;
 use App\Observers\Api\V1\CodeObserver;
 use App\Observers\Api\V1\LotteryCodeCodeObserver;
 use App\Observers\Api\V1\LotteryCodeLotteryObserver;
+use App\Observers\Api\V1\LotteryCodeObserver;
 use App\Observers\Api\V1\LotteryObserver;
 use App\Observers\Api\V1\SpecialCodeCodeObserver;
 use App\Observers\Api\V1\SpecialCodeObserver;
@@ -41,6 +43,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         SpecialCode::class => [
             SpecialCodeObserver::class,
+        ],
+        LotteryCode::class => [
+            LotteryCodeObserver::class,
         ],
     ];
 
