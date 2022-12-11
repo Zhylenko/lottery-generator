@@ -17,7 +17,13 @@ class LotteryCodeSeeder extends Seeder
     public function run()
     {
         Lottery::factory(3)->create()->each(function (Lottery $lottery) {
-            $lottery->codes()->saveMany(Code::factory(50)->make());
+            for ($i = 0; $i < 50; $i++) {
+                $lottery->codes()->create([
+                    'code' => \LotteryCodeService::generateLotteryCode($lottery, true),
+                ]);
+            }
+
+            // $lottery->codes()->saveMany(Code::factory(50)->make());
         });
     }
 }
