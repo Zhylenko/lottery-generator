@@ -132,4 +132,28 @@ class LotteryCodeSpecialControllerTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_store_lottery_code_special()
+    {
+        $lottery = Lottery::inRandomOrder()->first();
+        $data = [];
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
+
+        $response = $this->postJson(Route('lottery.code.special.store', $lottery), $data);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    'code' => $data['code'],
+                    'lottery' => [
+                        'id' => $lottery->id,
+                        'name' => $lottery->name,
+                        'numbers_count' => $lottery->numbers_count,
+                        'numbers_from' => $lottery->numbers_from,
+                        'numbers_to' => $lottery->numbers_to,
+                    ],
+                ],
+            ]);
+    }
 }

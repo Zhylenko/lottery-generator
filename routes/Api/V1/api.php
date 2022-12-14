@@ -66,7 +66,8 @@ Route::controller(App\Http\Controllers\Api\V1\LotteryController::class)
                         Route::get('/codes/{code}/special', 'show')
                             ->whereNumber('code')
                             ->name('.show');
-                        Route::post('/codes/special', 'store')
+                        Route::post('/{lottery}/codes/special', 'store')
+                            ->whereNumber('lottery')
                             ->name('.store');
                         Route::put('/codes/{code}/special', 'update')
                             ->whereNumber('code')

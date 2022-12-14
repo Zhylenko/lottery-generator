@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\StoreCodeRequest;
+use App\Http\Requests\Api\V1\UpdateCodeRequest;
 use App\Http\Resources\Api\V1\LotteryCodeSpecialCollection;
 use App\Http\Resources\Api\V1\LotteryCodeSpecialResource;
 use App\Models\Api\V1\Code;
@@ -23,9 +25,12 @@ class LotteryCodeSpecialController extends Controller
     public function index(Request $request)
     {
         $lotteryCodesSpecial = Cache::tags(['lotteries', 'codes', 'special'])->remember('page_' . $request->get('page', 1), Carbon::now()->addDay(), function () {
-            return LotteryCode::has('special')
-                ->with(['lottery', 'code'])
-                ->orderBy('code_id', 'desc')
+            return LotteryCodeSpecial::with([
+                'lotteryCode.lottery',
+                'lotteryCode.code',
+            ])
+                ->join('lottery_code', 'lottery_code_special.lottery_code_id', '=', 'lottery_code.id')
+                ->orderBy('lottery_code.code_id', 'desc')
                 ->paginate(15);
         });
 
@@ -40,10 +45,13 @@ class LotteryCodeSpecialController extends Controller
     public function indexByLottery(Request $request, Lottery $lottery)
     {
         $lotteryCodesSpecial = Cache::tags(['lotteries', 'codes', 'special', 'lottery_' . $lottery->id])->remember('page_' . $request->get('page', 1), Carbon::now()->addDay(), function () use ($lottery) {
-            return LotteryCode::has('special')
-                ->whereRelation('lottery', 'id', $lottery->id)
-                ->with(['lottery', 'code'])
-                ->orderBy('code_id', 'desc')
+            return LotteryCodeSpecial::with([
+                'lotteryCode.lottery',
+                'lotteryCode.code',
+            ])
+                ->whereRelation('lotteryCode.lottery', 'id', $lottery->id)
+                ->join('lottery_code', 'lottery_code_special.lottery_code_id', '=', 'lottery_code.id')
+                ->orderBy('lottery_code.code_id', 'desc')
                 ->paginate(15);
         });
 
@@ -53,12 +61,23 @@ class LotteryCodeSpecialController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\StoreCodeRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCodeRequest $request, Lottery $lottery)
     {
-        //
+        $code = $lottery->codes()
+            ->create([
+                'code' => $request->code,
+            ]);
+
+        $lotteryCodeSpecial = LotteryCode::whereRelation('lottery', 'id', $lottery->id)
+            ->whereRelation('code', 'id', $code->id)
+            ->first()
+            ->special()
+            ->create();
+
+        return new LotteryCodeSpecialResource($lotteryCodeSpecial);
     }
 
     /**
@@ -69,9 +88,11 @@ class LotteryCodeSpecialController extends Controller
      */
     public function show(Code $code)
     {
-        $lotteryCodeSpecial = LotteryCode::has('special')
-            ->whereRelation('code', 'id', $code->id)
-            ->with(['lottery', 'code'])
+        $lotteryCodeSpecial = LotteryCodeSpecial::with([
+            'lotteryCode.lottery',
+            'lotteryCode.code',
+        ])
+            ->whereRelation('lotteryCode.code', 'id', $code->id)
             ->firstOrFail();
 
         return new LotteryCodeSpecialResource($lotteryCodeSpecial);
@@ -80,11 +101,11 @@ class LotteryCodeSpecialController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\UpdateCodeRequest  $request
      * @param  \App\Models\Api\V1\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Code $code)
+    public function update(UpdateCodeRequest $request, Code $code)
     {
         //
     }
