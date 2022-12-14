@@ -54,6 +54,28 @@ Route::controller(App\Http\Controllers\Api\V1\LotteryController::class)
                     ->whereNumber('code')
                     ->name('.destroy');
 
+                Route::controller(App\Http\Controllers\Api\V1\LotteryCodeSpecialController::class)
+                    ->name('.special')
+                    ->group(function () {
+
+                        Route::get('/codes/special', 'index')
+                            ->name('.index');
+                        Route::get('/{lottery}/codes/special', 'indexByLottery')
+                            ->whereNumber('lottery')
+                            ->name('.lottery.index');
+                        Route::get('/codes/{code}/special', 'show')
+                            ->whereNumber('code')
+                            ->name('.show');
+                        Route::post('/codes/special', 'store')
+                            ->name('.store');
+                        Route::put('/codes/{code}/special', 'update')
+                            ->whereNumber('code')
+                            ->name('.update');
+                        Route::delete('/codes/{code}/special', 'destroy')
+                            ->whereNumber('code')
+                            ->name('.destroy');
+                    });
+
                 Route::controller(App\Http\Controllers\Api\V1\LotteryCodeGeneratedController::class)
                     ->name('.generated')
                     ->group(function () {

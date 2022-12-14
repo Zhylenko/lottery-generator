@@ -25,4 +25,9 @@ class LotteryCode extends Model
     {
         return $this->hasOne(LotteryCodeGenerated::class);
     }
+
+    public function special()
+    {
+        return $this->hasOne(LotteryCodeSpecial::class);
+    }
 }
