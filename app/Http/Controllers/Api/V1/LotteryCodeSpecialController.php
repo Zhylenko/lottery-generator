@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\LotteryCodeSpecialCollection;
+use App\Models\Api\V1\Lottery;
 use App\Models\Api\V1\LotteryCode;
 use App\Models\Api\V1\LotteryCodeSpecial;
 use Carbon\Carbon;
@@ -29,9 +30,17 @@ class LotteryCodeSpecialController extends Controller
         return new LotteryCodeSpecialCollection($lotteryCodesSpecial);
     }
 
-    public function indexByLottery()
+    public function indexByLottery(Request $request, Lottery $lottery)
     {
-        # code...
+        $lotteryCodesSpecial = Cache::tags(['lotteries', 'codes', 'special', 'lottery_' . $lottery->id])->remember('page_' . $request->get('page', 1), Carbon::now()->addDay(), function () use ($lottery) {
+            return LotteryCode::has('special')
+                ->whereRelation('lottery', 'id', $lottery->id)
+                ->with(['lottery', 'code'])
+                ->orderBy('code_id', 'desc')
+                ->paginate(15);
+        });
+
+        return new LotteryCodeSpecialCollection($lotteryCodesSpecial);
     }
 
     /**
