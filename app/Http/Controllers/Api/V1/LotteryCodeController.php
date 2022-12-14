@@ -9,6 +9,7 @@ use App\Http\Resources\Api\V1\LotteryCodeCollection;
 use App\Http\Resources\Api\V1\LotteryCodeResource;
 use App\Models\Api\V1\Code;
 use App\Models\Api\V1\Lottery;
+use App\Models\Api\V1\LotteryCode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -23,7 +24,9 @@ class LotteryCodeController extends Controller
     public function index(Request $request)
     {
         $lotteryCodes = Cache::tags(['lotteries', 'codes'])->remember('page_' . $request->get('page', 1), Carbon::now()->addDay(), function () {
-            return Code::has('lotteries')->orderBy('id', 'desc')->paginate(15);
+            return LotteryCode::with(['lottery', 'code'])
+                ->orderBy('code_id', 'desc')
+                ->paginate(15);
         });
 
         return new LotteryCodeCollection($lotteryCodes);
@@ -37,7 +40,10 @@ class LotteryCodeController extends Controller
     public function indexByLottery(Request $request, Lottery $lottery)
     {
         $lotteryCodes = Cache::tags(['lotteries', 'codes', 'lottery_' . $lottery->id])->remember('page_' . $request->get('page', 1), Carbon::now()->addDay(), function () use ($lottery) {
-            return $lottery->codes()->orderBy('id', 'desc')->paginate(15);
+            return LotteryCode::with(['lottery', 'code'])
+                ->whereRelation('lottery', 'id', $lottery->id)
+                ->orderBy('code_id', 'desc')
+                ->paginate(15);
         });
 
         return new LotteryCodeCollection($lotteryCodes);
@@ -51,8 +57,13 @@ class LotteryCodeController extends Controller
      */
     public function store(StoreLotteryCodeRequest $request, Lottery $lottery)
     {
-        $lotteryCode = $lottery->codes()->create([
+        $code = Code::create([
             'code' => $request->code,
+        ]);
+
+        $lotteryCode = LotteryCode::create([
+            'lottery_id' => $lottery->id,
+            'code_id' => $code->id,
         ]);
 
         return new LotteryCodeResource($lotteryCode);
@@ -66,7 +77,9 @@ class LotteryCodeController extends Controller
      */
     public function show(Code $code)
     {
-        $lotteryCode = Code::has('lotteries')->findOrFail($code->id);
+        $lotteryCode = LotteryCode::with(['lottery', 'code'])
+            ->whereRelation('code', 'id', $code->id)
+            ->firstOrFail();
 
         return new LotteryCodeResource($lotteryCode);
     }

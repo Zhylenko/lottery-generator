@@ -11,6 +11,11 @@ class LotteryCode extends Model
 
     protected $table = 'lottery_code';
 
+    protected $fillable = [
+        'lottery_id',
+        'code_id',
+    ];
+
     public function lottery()
     {
         return $this->belongsTo(Lottery::class);
