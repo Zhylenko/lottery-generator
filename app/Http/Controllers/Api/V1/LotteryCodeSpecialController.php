@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\LotteryCodeSpecialCollection;
+use App\Http\Resources\Api\V1\LotteryCodeSpecialResource;
+use App\Models\Api\V1\Code;
 use App\Models\Api\V1\Lottery;
 use App\Models\Api\V1\LotteryCode;
 use App\Models\Api\V1\LotteryCodeSpecial;
@@ -30,6 +32,11 @@ class LotteryCodeSpecialController extends Controller
         return new LotteryCodeSpecialCollection($lotteryCodesSpecial);
     }
 
+    /**
+     * Display a listing of the resource by relation model.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function indexByLottery(Request $request, Lottery $lottery)
     {
         $lotteryCodesSpecial = Cache::tags(['lotteries', 'codes', 'special', 'lottery_' . $lottery->id])->remember('page_' . $request->get('page', 1), Carbon::now()->addDay(), function () use ($lottery) {
@@ -57,22 +64,27 @@ class LotteryCodeSpecialController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Api\V1\LotteryCodeSpecial  $lotteryCodeSpecial
+     * @param  \App\Models\Api\V1\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function show(LotteryCodeSpecial $lotteryCodeSpecial)
+    public function show(Code $code)
     {
-        //
+        $lotteryCodeSpecial = LotteryCode::has('special')
+            ->whereRelation('code', 'id', $code->id)
+            ->with(['lottery', 'code'])
+            ->firstOrFail();
+
+        return new LotteryCodeSpecialResource($lotteryCodeSpecial);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Api\V1\LotteryCodeSpecial  $lotteryCodeSpecial
+     * @param  \App\Models\Api\V1\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, LotteryCodeSpecial $lotteryCodeSpecial)
+    public function update(Request $request, Code $code)
     {
         //
     }
@@ -80,10 +92,10 @@ class LotteryCodeSpecialController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Api\V1\LotteryCodeSpecial  $lotteryCodeSpecial
+     * @param  \App\Models\Api\V1\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function destroy(LotteryCodeSpecial $lotteryCodeSpecial)
+    public function destroy(Code $code)
     {
         //
     }

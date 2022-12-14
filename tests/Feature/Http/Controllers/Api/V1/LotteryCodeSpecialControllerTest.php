@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Api\V1;
 
 use App\Models\Api\V1\Lottery;
+use App\Models\Api\V1\LotteryCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
@@ -90,5 +91,45 @@ class LotteryCodeSpecialControllerTest extends TestCase
         $this->getJson(Route('lottery.code.special.lottery.index', $lottery));
 
         $this->assertTrue(Cache::tags(['lotteries', 'codes', 'special', 'lottery_' . $lottery->id])->has('page_1'));
+    }
+
+    public function test_get_show()
+    {
+        $lotteryCodeSpecial = LotteryCode::has('special')
+            ->inRandomOrder()
+            ->first();
+
+        $lottery = $lotteryCodeSpecial->lottery;
+        $code = $lotteryCodeSpecial->code;
+
+        $response = $this->getJson(Route('lottery.code.special.show', $code));
+
+        $response->assertStatus(200)
+            ->assertExactJson([
+                'data' => [
+                    'id' => $code->id,
+                    'code' => $code->code,
+                    'lottery' => [
+                        'id' => $lottery->id,
+                        'name' => $lottery->name,
+                        'numbers_count' => $lottery->numbers_count,
+                        'numbers_from' => $lottery->numbers_from,
+                        'numbers_to' => $lottery->numbers_to,
+                    ],
+                ],
+            ]);
+    }
+
+    public function test_get_show_lottery_code_not_special_not_found_error()
+    {
+        $lotteryCode = LotteryCode::doesntHave('special')
+            ->inRandomOrder()
+            ->first();
+
+        $code = $lotteryCode->code;
+
+        $response = $this->getJson(Route('lottery.code.special.show', $code));
+
+        $response->assertStatus(404);
     }
 }

@@ -15,7 +15,7 @@ class LotteryCodeSpecialResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id' => $this->code->id,
             'code' => $this->code->code,
             'lottery' => new LotteryResource($this->lottery),
         ];
