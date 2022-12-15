@@ -188,7 +188,7 @@ class LotteryCodeSpecialControllerTest extends TestCase
             ]);
     }
 
-    public function test_update_not_lottery_code_special_code_not_found_error()
+    public function test_update_lottery_code_not_special_code_not_found_error()
     {
         $lotteryCode = LotteryCode::doesntHave('special')
             ->inRandomOrder()
@@ -240,6 +240,41 @@ class LotteryCodeSpecialControllerTest extends TestCase
                 ],
             ]);
 
-        $this->assertFalse($lottery->codes()->where('codes.id', $lottery->id)->exists());
+        $this->assertFalse($lottery->codes()->where('codes.id', $code->id)->exists());
+    }
+
+    public function test_destroy_lottery_code_special()
+    {
+        $lotteryCodeSpecial = LotteryCode::has('special')
+            ->inRandomOrder()
+            ->first();
+
+        $lottery = $lotteryCodeSpecial->lottery;
+        $code = $lotteryCodeSpecial->code;
+
+        $response = $this->deleteJson(Route('lottery.code.special.destroy', $code));
+
+        $response->assertStatus(200)
+            ->assertExactJson([1]);
+
+        $this->assertModelMissing($code);
+        $this->assertFalse($lottery->codes()->where('codes.id', $code->id)->exists());
+    }
+
+    public function test_destroy_lottery_code_not_special_not_found_error()
+    {
+        $lotteryCodeSpecial = LotteryCode::doesnthave('special')
+            ->inRandomOrder()
+            ->first();
+
+        $lottery = $lotteryCodeSpecial->lottery;
+        $code = $lotteryCodeSpecial->code;
+
+        $response = $this->deleteJson(Route('lottery.code.special.destroy', $code));
+
+        $response->assertStatus(404);
+
+        $this->assertModelExists($code);
+        $this->assertTrue($lottery->codes()->where('codes.id', $code->id)->exists());
     }
 }

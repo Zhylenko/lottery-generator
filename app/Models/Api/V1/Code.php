@@ -25,7 +25,5 @@ class Code extends Model
     public function special()
     {
         return $this->hasOneThrough(LotteryCodeSpecial::class, LotteryCode::class);
-
-        return $this->hasOne(SpecialCode::class);
     }
 }

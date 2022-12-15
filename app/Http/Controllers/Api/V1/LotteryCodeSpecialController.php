@@ -138,6 +138,15 @@ class LotteryCodeSpecialController extends Controller
      */
     public function destroy(Code $code)
     {
-        //
+        $lotteryCodeSpecial = LotteryCodeSpecial::with([
+            'lotteryCode.lottery',
+            'lotteryCode.code',
+        ])
+            ->whereRelation('lotteryCode.code', 'id', $code->id)
+            ->firstOrFail();
+
+        $code = $lotteryCodeSpecial->lotteryCode->code;
+
+        return $code->delete();
     }
 }
