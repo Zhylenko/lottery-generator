@@ -4,7 +4,7 @@ namespace Tests\Feature\Services\Api\V1\Conditions\Code;
 
 use App\Contracts\Api\V1\Condition;
 use App\Models\Api\V1\Code;
-use App\Models\Api\V1\SpecialCode;
+use App\Models\Api\V1\LotteryCodeSpecial;
 use App\Services\Api\V1\Conditions\Code\SpecialCodeCondition;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -23,10 +23,11 @@ class SpecialCodeConditionTest extends TestCase
 
     public function test_handle()
     {
-        $specialCode = SpecialCode::has('code')->inRandomOrder()->first();
-        $specialCodeCode = $specialCode->code;
+        $lotteryCodeSpecial = LotteryCodeSpecial::inRandomOrder()
+            ->first();
+        $code = $lotteryCodeSpecial->lotteryCode->code;
 
-        $result = $this->condition->handle($specialCodeCode->code);
+        $result = $this->condition->handle($code->code);
 
         $this->assertFalse($result);
     }

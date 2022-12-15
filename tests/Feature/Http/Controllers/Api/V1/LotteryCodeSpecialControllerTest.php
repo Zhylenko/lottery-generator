@@ -257,6 +257,7 @@ class LotteryCodeSpecialControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertExactJson([1]);
 
+        $this->assertModelMissing($lotteryCodeSpecial);
         $this->assertModelMissing($code);
         $this->assertFalse($lottery->codes()->where('codes.id', $code->id)->exists());
     }
@@ -274,6 +275,7 @@ class LotteryCodeSpecialControllerTest extends TestCase
 
         $response->assertStatus(404);
 
+        $this->assertModelExists($lotteryCodeSpecial);
         $this->assertModelExists($code);
         $this->assertTrue($lottery->codes()->where('codes.id', $code->id)->exists());
     }

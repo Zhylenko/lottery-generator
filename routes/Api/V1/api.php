@@ -105,24 +105,4 @@ Route::controller(App\Http\Controllers\Api\V1\CodeController::class)
         Route::delete('/{code}', 'destroy')
             ->whereNumber('code')
             ->name('.destroy');
-
-        Route::controller(App\Http\Controllers\Api\V1\SpecialCodeController::class)
-            ->prefix('special')
-            ->name('.special')
-            ->group(function () {
-
-                Route::get('/', 'index')
-                    ->name('.index');
-                Route::get('/{code}', 'show')
-                    ->whereNumber('code')
-                    ->name('.show');
-                Route::post('/', 'store')
-                    ->name('.store');
-                Route::put('/{code}', 'update')
-                    ->whereNumber('code')
-                    ->name('.update');
-                Route::delete('/{code}', 'destroy')
-                    ->whereNumber('code')
-                    ->name('.destroy');
-            });
     });
