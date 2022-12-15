@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\StoreCodeRequest;
-use App\Http\Requests\Api\V1\UpdateCodeRequest;
+use App\Http\Requests\Api\V1\StoreLotteryCodeRequest;
+use App\Http\Requests\Api\V1\UpdateLotteryCodeRequest;
 use App\Http\Resources\Api\V1\LotteryCodeSpecialCollection;
 use App\Http\Resources\Api\V1\LotteryCodeSpecialResource;
 use App\Models\Api\V1\Code;
@@ -61,10 +61,10 @@ class LotteryCodeSpecialController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\StoreCodeRequest  $request
+     * @param  \Illuminate\Http\StoreLotteryCodeRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCodeRequest $request, Lottery $lottery)
+    public function store(StoreLotteryCodeRequest $request, Lottery $lottery)
     {
         $code = $lottery->codes()
             ->create([
@@ -101,13 +101,33 @@ class LotteryCodeSpecialController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\UpdateCodeRequest  $request
+     * @param  \Illuminate\Http\UpdateLotteryCodeRequest  $request
      * @param  \App\Models\Api\V1\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCodeRequest $request, Code $code)
+    public function update(UpdateLotteryCodeRequest $request, Code $code)
     {
-        //
+        $lotteryCodeSpecial = LotteryCodeSpecial::with([
+            'lotteryCode.lottery',
+            'lotteryCode.code',
+        ])
+            ->whereRelation('lotteryCode.code', 'id', $code->id)
+            ->firstOrFail();
+
+        $lotteryCode = $lotteryCodeSpecial->lotteryCode;
+        $lottery = Lottery::findOrFail($request->lottery);
+
+        $lotteryCode->update([
+            'lottery_id' => $lottery->id,
+        ]);
+
+        $code = $lotteryCodeSpecial->lotteryCode->code;
+
+        $code->update([
+            'code' => $request->code,
+        ]);
+
+        return $this->show($code);
     }
 
     /**

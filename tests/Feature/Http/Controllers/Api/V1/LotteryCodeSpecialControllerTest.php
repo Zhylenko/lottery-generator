@@ -156,4 +156,90 @@ class LotteryCodeSpecialControllerTest extends TestCase
                 ],
             ]);
     }
+
+    public function test_update_lottery_code_special_code()
+    {
+        $lotteryCodeSpecial = LotteryCode::has('special')
+            ->inRandomOrder()
+            ->first();
+        $data = [];
+
+        $lottery = $lotteryCodeSpecial->lottery;
+        $code = $lotteryCodeSpecial->code;
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
+        $data['lottery'] = $lottery->id;
+
+        $response = $this->putJson(Route('lottery.code.special.update', $code), $data);
+
+        $response->assertStatus(200)
+            ->assertExactJson([
+                'data' => [
+                    'id' => $code->id,
+                    'code' => $data['code'],
+                    'lottery' => [
+                        'id' => $lottery->id,
+                        'name' => $lottery->name,
+                        'numbers_count' => $lottery->numbers_count,
+                        'numbers_from' => $lottery->numbers_from,
+                        'numbers_to' => $lottery->numbers_to,
+                    ],
+                ],
+            ]);
+    }
+
+    public function test_update_not_lottery_code_special_code_not_found_error()
+    {
+        $lotteryCode = LotteryCode::doesntHave('special')
+            ->inRandomOrder()
+            ->first();
+
+        $lottery = $lotteryCode->lottery;
+        $code = $lotteryCode->code;
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
+        $data['lottery'] = $lottery->id;
+
+        $response = $this->putJson(Route('lottery.code.special.update', $code), $data);
+
+        $response->assertStatus(404);
+    }
+
+    public function test_update_lottery_code_special_lottery()
+    {
+        $lotteryCodeSpecial = LotteryCode::has('special')
+            ->inRandomOrder()
+            ->first();
+        $data = [];
+
+        $lottery = $lotteryCodeSpecial->lottery;
+        $code = $lotteryCodeSpecial->code;
+
+        $newLottery = Lottery::whereRelation('codes', 'code_id', '!=', $code->id)
+            ->where('id', '!=', $lottery->id)
+            ->inRandomOrder()
+            ->first();
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($newLottery, true);
+        $data['lottery'] = $newLottery->id;
+
+        $response = $this->putJson(Route('lottery.code.special.update', $code), $data);
+
+        $response->assertStatus(200)
+            ->assertExactJson([
+                'data' => [
+                    'id' => $code->id,
+                    'code' => $data['code'],
+                    'lottery' => [
+                        'id' => $newLottery->id,
+                        'name' => $newLottery->name,
+                        'numbers_count' => $newLottery->numbers_count,
+                        'numbers_from' => $newLottery->numbers_from,
+                        'numbers_to' => $newLottery->numbers_to,
+                    ],
+                ],
+            ]);
+
+        $this->assertFalse($lottery->codes()->where('codes.id', $lottery->id)->exists());
+    }
 }
