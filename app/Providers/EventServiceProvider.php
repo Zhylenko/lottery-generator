@@ -10,6 +10,8 @@ use App\Observers\Api\V1\CodeObserver;
 use App\Observers\Api\V1\LotteryCodeCodeObserver;
 use App\Observers\Api\V1\LotteryCodeLotteryObserver;
 use App\Observers\Api\V1\LotteryCodeObserver;
+use App\Observers\Api\V1\LotteryCodeSpecialCodeObserver;
+use App\Observers\Api\V1\LotteryCodeSpecialLotteryObserver;
 use App\Observers\Api\V1\LotteryObserver;
 use App\Observers\Api\V1\SpecialCodeCodeObserver;
 use App\Observers\Api\V1\SpecialCodeObserver;
@@ -35,10 +37,12 @@ class EventServiceProvider extends ServiceProvider
         Lottery::class => [
             LotteryObserver::class,
             LotteryCodeLotteryObserver::class,
+            LotteryCodeSpecialLotteryObserver::class,
         ],
         Code::class => [
             CodeObserver::class,
             LotteryCodeCodeObserver::class,
+            LotteryCodeSpecialCodeObserver::class,
             SpecialCodeCodeObserver::class,
         ],
         SpecialCode::class => [
