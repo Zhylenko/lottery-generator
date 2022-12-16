@@ -76,11 +76,10 @@ class LotteryCodeSpecialLotteryObserverTest extends TestCase
         $codeLottery = $lotteryCode->lotteries()->first();
 
         $lottery = Lottery::has('codes')->whereRelation('codes', 'code_id', '!=', $lotteryCode->id)->where('id', '!=', $codeLottery->id)->inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = $lottery->id;
 

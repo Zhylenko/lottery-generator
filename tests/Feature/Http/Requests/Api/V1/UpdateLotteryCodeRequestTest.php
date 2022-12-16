@@ -47,11 +47,10 @@ class UpdateLotteryCodeRequestTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = $lottery->id;
         $data['code'][0] = $this->faker->word();
@@ -68,11 +67,10 @@ class UpdateLotteryCodeRequestTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = $lottery->id;
         $data['code'][0] = $this->faker->randomFloat(5, $lottery->numbers_from, $lottery->numbers_to);
@@ -89,11 +87,10 @@ class UpdateLotteryCodeRequestTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count + 1; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \CodeService::generate($lottery->numbers_count + 1, $lottery->numbers_from, $lottery->numbers_to, true);
 
         $data['lottery'] = $lottery->id;
 
@@ -109,11 +106,10 @@ class UpdateLotteryCodeRequestTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = $lottery->id;
         $data['code'][0] = $lottery->numbers_from - 1;
@@ -130,11 +126,10 @@ class UpdateLotteryCodeRequestTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = $lottery->id;
         $data['code'][0] = $lottery->numbers_to + 1;
@@ -151,11 +146,10 @@ class UpdateLotteryCodeRequestTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = $lottery->id;
         $data['code'][0] = $lottery->numbers_from;
@@ -172,11 +166,10 @@ class UpdateLotteryCodeRequestTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = $lottery->id;
         $data['code'][0] = $lottery->numbers_to;
@@ -193,11 +186,10 @@ class UpdateLotteryCodeRequestTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = 0;
 

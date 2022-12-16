@@ -101,11 +101,10 @@ class LotteryCodeCodeObserverTest extends TestCase
         $this->assertTrue(Cache::tags(['lotteries', 'codes'])->has('page_' . $page));
 
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $response = $this->postJson(Route('lottery.code.store', $lottery), $data);
 
@@ -124,11 +123,10 @@ class LotteryCodeCodeObserverTest extends TestCase
 
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
+        
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['lottery'] = $lottery->id;
 

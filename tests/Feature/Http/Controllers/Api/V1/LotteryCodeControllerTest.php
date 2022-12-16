@@ -124,11 +124,10 @@ class LotteryCodeControllerTest extends TestCase
     public function test_store_lottery_code()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $response = $this->postJson(Route('lottery.code.store', $lottery), $data);
 
@@ -151,12 +150,10 @@ class LotteryCodeControllerTest extends TestCase
     {
         $lotteryCode = Code::has('lotteries')->inRandomOrder()->first();
         $lottery = $lotteryCode->lotteries()->first();
-        // $data = Code::factory()->make()->toArray();
-        $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
 
+        $data = ['code' => []];
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
         $data['lottery'] = $lottery->id;
 
         $response = $this->putJson(Route('lottery.code.update', $lotteryCode), $data);
@@ -183,12 +180,10 @@ class LotteryCodeControllerTest extends TestCase
         $codeLottery = $lotteryCode->lotteries()->first();
 
         $lottery = Lottery::has('codes')->whereRelation('codes', 'code_id', '!=', $lotteryCode->id)->where('id', '!=', $codeLottery->id)->inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
-        $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
 
+        $data = ['code' => []];
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
         $data['lottery'] = $lottery->id;
 
         $response = $this->putJson(Route('lottery.code.update', $lotteryCode), $data);

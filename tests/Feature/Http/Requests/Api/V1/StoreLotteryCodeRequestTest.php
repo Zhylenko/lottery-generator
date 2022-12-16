@@ -46,11 +46,10 @@ class StoreLotteryCodeRequestTest extends TestCase
     public function test_array_elements_not_integer_fields_error()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['code'][0] = $this->faker->word();
 
@@ -65,11 +64,10 @@ class StoreLotteryCodeRequestTest extends TestCase
     public function test_array_elements_float_fields_error()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['code'][0] = $this->faker->randomFloat(5, $lottery->numbers_from, $lottery->numbers_to);
 
@@ -84,11 +82,10 @@ class StoreLotteryCodeRequestTest extends TestCase
     public function test_array_size_fields_error()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count + 1; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \CodeService::generate($lottery->numbers_count + 1, $lottery->numbers_from, $lottery->numbers_to, true);
 
         $response = $this->postJson(Route('lottery.code.store', $lottery), $data);
 
@@ -101,11 +98,10 @@ class StoreLotteryCodeRequestTest extends TestCase
     public function test_array_elements_min_size_fields_error()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['code'][0] = $lottery->numbers_from - 1;
 
@@ -120,11 +116,10 @@ class StoreLotteryCodeRequestTest extends TestCase
     public function test_array_elements_max_size_fields_error()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['code'][0] = $lottery->numbers_to + 1;
 
@@ -139,11 +134,10 @@ class StoreLotteryCodeRequestTest extends TestCase
     public function test_array_elements_size_equals_to_min_fields_not_error()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['code'][0] = $lottery->numbers_from;
 
@@ -158,11 +152,10 @@ class StoreLotteryCodeRequestTest extends TestCase
     public function test_array_elements_size_equals_to_max_fields_not_error()
     {
         $lottery = Lottery::inRandomOrder()->first();
-        // $data = Code::factory()->make()->toArray();
+
         $data = ['code' => []];
-        for ($i = 0; $i < $lottery->numbers_count; $i++) {
-            $data['code'][] = $this->faker->numberBetween($lottery->numbers_from, $lottery->numbers_to);
-        }
+
+        $data['code'] = \LotteryCodeService::generateLotteryCode($lottery, true);
 
         $data['code'][0] = $lottery->numbers_to;
 
