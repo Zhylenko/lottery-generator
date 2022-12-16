@@ -11,12 +11,14 @@ use App\Services\Api\V1\Conditions\Code\ConsecutiveNumbersCombinationsCondition;
 use App\Services\Api\V1\Conditions\Code\ConsecutiveNumbersCombinationsInGeneratedSetsCondition;
 use App\Services\Api\V1\Conditions\Code\ConsecutiveTwoNumbersCombinationsCondition;
 use App\Services\Api\V1\Conditions\Code\SpecialCodeCondition;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class GenerateLotteryCodeJob implements ShouldQueue
 {
@@ -44,26 +46,24 @@ class GenerateLotteryCodeJob implements ShouldQueue
         $lottery = Lottery::findOrFail($request['lottery']);
         $condition = null;
 
-        LotteryCode::has('generated')->whereRelation('lottery', 'id', $lottery->id)->delete();
-
         if ($request['exclude_sets_of_consecutive_2_numbers_combinations'] == true) {
             $newCondition = new ConsecutiveTwoNumbersCombinationsCondition;
-            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $firstCondition = $newCondition;
         }
 
         if ($request['exclude_sets_of_consecutive_numbers_combinations'] == true) {
             $newCondition = new ConsecutiveNumbersCombinationsCondition;
-            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $firstCondition = $newCondition;
         }
 
         if ($request['exclude_generated_sets_of_consecutive_numbers_combinations'] == true) {
             $newCondition = new ConsecutiveNumbersCombinationsInGeneratedSetsCondition($lottery);
-            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $firstCondition = $newCondition;
         }
 
         if ($request['exclude_special_codes_combinations'] == true) {
             $newCondition = new SpecialCodeCondition($lottery);
-            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $firstCondition = $newCondition;
         }
 
         foreach ($request['exclude_code_combinations'] as $exclude_code_combination) {
@@ -75,14 +75,28 @@ class GenerateLotteryCodeJob implements ShouldQueue
                 $exclude_code_combination['to'],
             );
 
-            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
+            $condition = $condition instanceof Condition ? $condition->next($newCondition) : $firstCondition = $newCondition;
         }
 
+        Cache::tags(['lotteries', 'codes', 'generated', 'lottery_' . $lottery->id])->flush();
+
         for ($i = 0; $i < $request['count']; $i++) {
+            $conditionResult = false;
+
             do {
                 $code = \LotteryCodeService::generateLotteryCode($lottery, true);
-                $conditionResult = $condition->handle($code);
+                $codeString = json_encode($code);
+
+                if (Cache::tags(['lotteries', 'codes', 'generated', 'lottery_' . $lottery->id])->has($codeString))
+                    continue;
+
+                $conditionResult = $firstCondition->handle($code);
+
+                Cache::tags(['lotteries', 'codes', 'generated', 'lottery_' . $lottery->id])->forever($codeString, 1);
             } while ($conditionResult === false);
+
+            if (LotteryCode::has('generated')->whereRelation('lottery', 'id', $lottery->id)->count() >= $request['count'])
+                return;
 
             \LotteryCodeService::storeLotteryCode($lottery, $code, true);
         }

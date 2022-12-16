@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            LotterySeeder::class,
-            CodeSeeder::class,
-            LotteryCodeSeeder::class,
-            LotteryCodeSpecialSeeder::class,
+            LotteriesTableSeeder::class,
+            CodesTableSeeder::class,
+            LotteryCodeTableSeeder::class,
+            LotteryCodeSpecialTableSeeder::class,
         ]);
     }
 }
