@@ -21,8 +21,8 @@ class LotteryCodeGeneratedControllerTest extends TestCase
         $data = [
             'lottery' => $lottery->id,
             'exclude_code_combinations' => [],
-            'include_sets_of_consecutive_2_numbers_combinations' => 1,
-            'include_special_codes_combinations' => 0,
+            'exclude_sets_of_consecutive_2_numbers_combinations' => 0,
+            'exclude_special_codes_combinations' => 1,
             'exclude_sets_of_consecutive_numbers_combinations' => 1,
             'exclude_generated_sets_of_consecutive_numbers_combinations' => 1,
             'count' => 1,

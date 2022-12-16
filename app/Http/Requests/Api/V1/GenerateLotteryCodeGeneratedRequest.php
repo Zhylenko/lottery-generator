@@ -66,12 +66,12 @@ class GenerateLotteryCodeGeneratedRequest extends FormRequest
                 'min:1',
                 'gte:exclude_code_combinations.*.from',
             ],
-            'include_sets_of_consecutive_2_numbers_combinations' => [
+            'exclude_sets_of_consecutive_2_numbers_combinations' => [
                 'bail',
                 'required',
                 'boolean',
             ],
-            'include_special_codes_combinations' => [
+            'exclude_special_codes_combinations' => [
                 'bail',
                 'required',
                 'boolean',

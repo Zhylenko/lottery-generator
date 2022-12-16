@@ -15,8 +15,8 @@ class GenerateLotteryCodeGeneratedRequestTest extends TestCase
         $data = [
             'lottery' => '',
             'exclude_code_combinations' => [],
-            'include_sets_of_consecutive_2_numbers_combinations' => '',
-            'include_special_codes_combinations' => '',
+            'exclude_sets_of_consecutive_2_numbers_combinations' => '',
+            'exclude_special_codes_combinations' => '',
             'exclude_sets_of_consecutive_numbers_combinations' => '',
             'exclude_generated_sets_of_consecutive_numbers_combinations' => '',
             'count' => '',
@@ -28,8 +28,8 @@ class GenerateLotteryCodeGeneratedRequestTest extends TestCase
             ->assertJsonValidationErrors([
                 'lottery',
                 'exclude_code_combinations',
-                'include_sets_of_consecutive_2_numbers_combinations',
-                'include_special_codes_combinations',
+                'exclude_sets_of_consecutive_2_numbers_combinations',
+                'exclude_special_codes_combinations',
                 'exclude_sets_of_consecutive_numbers_combinations',
                 'exclude_generated_sets_of_consecutive_numbers_combinations',
                 'count',
@@ -53,8 +53,8 @@ class GenerateLotteryCodeGeneratedRequestTest extends TestCase
     public function test_not_boolean_fields_error()
     {
         $data = [
-            'include_sets_of_consecutive_2_numbers_combinations' => $this->faker->word(),
-            'include_special_codes_combinations' => $this->faker->word(),
+            'exclude_sets_of_consecutive_2_numbers_combinations' => $this->faker->word(),
+            'exclude_special_codes_combinations' => $this->faker->word(),
             'exclude_sets_of_consecutive_numbers_combinations' => $this->faker->word(),
             'exclude_generated_sets_of_consecutive_numbers_combinations' => $this->faker->word(),
         ];
@@ -63,8 +63,8 @@ class GenerateLotteryCodeGeneratedRequestTest extends TestCase
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors([
-                'include_sets_of_consecutive_2_numbers_combinations',
-                'include_special_codes_combinations',
+                'exclude_sets_of_consecutive_2_numbers_combinations',
+                'exclude_special_codes_combinations',
                 'exclude_sets_of_consecutive_numbers_combinations',
                 'exclude_generated_sets_of_consecutive_numbers_combinations',
             ]);

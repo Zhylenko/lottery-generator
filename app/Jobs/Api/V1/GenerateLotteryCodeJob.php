@@ -46,7 +46,7 @@ class GenerateLotteryCodeJob implements ShouldQueue
 
         LotteryCode::has('generated')->whereRelation('lottery', 'id', $lottery->id)->delete();
 
-        if ($request['include_sets_of_consecutive_2_numbers_combinations'] == false) {
+        if ($request['exclude_sets_of_consecutive_2_numbers_combinations'] == true) {
             $newCondition = new ConsecutiveTwoNumbersCombinationsCondition;
             $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
         }
@@ -61,8 +61,8 @@ class GenerateLotteryCodeJob implements ShouldQueue
             $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
         }
 
-        if ($request['include_special_codes_combinations'] == true) {
-            $newCondition = new SpecialCodeCondition;
+        if ($request['exclude_special_codes_combinations'] == true) {
+            $newCondition = new SpecialCodeCondition($lottery);
             $condition = $condition instanceof Condition ? $condition->next($newCondition) : $newCondition;
         }
 
