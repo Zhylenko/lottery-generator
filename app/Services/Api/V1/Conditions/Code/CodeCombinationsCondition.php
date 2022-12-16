@@ -37,6 +37,8 @@ class CodeCombinationsCondition extends Condition
         $to = $this->to;
 
         $fromRecord = Code::whereRelation('lotteries', 'lottery_id', $lottery->id)
+            ->doesntHave('special')
+            ->doesntHave('generated')
             ->where('id', '>=', $from)
             ->where('id', '<=', $to)
             ->orderBy('id', 'desc')
@@ -50,6 +52,8 @@ class CodeCombinationsCondition extends Condition
 
         foreach ($codeCombinations as $codeCombination) {
             $result = Code::whereRelation('lotteries', 'lottery_id', $lottery->id)
+                ->doesntHave('special')
+                ->doesntHave('generated')
                 ->where('id', '>=', $from)
                 ->where('id', '<=', $to)
                 ->whereJsonContains('code', $codeCombination)

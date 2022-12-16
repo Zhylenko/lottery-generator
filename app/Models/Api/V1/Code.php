@@ -26,4 +26,9 @@ class Code extends Model
     {
         return $this->hasOneThrough(LotteryCodeSpecial::class, LotteryCode::class);
     }
+
+    public function generated()
+    {
+        return $this->hasOneThrough(LotteryCodeGenerated::class, LotteryCode::class);
+    }
 }
