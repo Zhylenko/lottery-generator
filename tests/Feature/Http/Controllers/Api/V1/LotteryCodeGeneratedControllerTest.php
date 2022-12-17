@@ -42,4 +42,18 @@ class LotteryCodeGeneratedControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertExactJson([1]);
     }
+
+    public function test_export_lottery_code_generated()
+    {
+        $lottery = Lottery::inRandomOrder()->first();
+
+        $data = [
+            'extension' => 'csv',
+        ];
+
+        $response = $this->postJson(Route('lottery.code.generated.export', $lottery), $data);
+
+        $response->assertStatus(200)
+            ->assertExactJson([1]);
+    }
 }

@@ -83,6 +83,9 @@ Route::controller(App\Http\Controllers\Api\V1\LotteryController::class)
 
                         Route::post('/codes/generated', 'generate')
                             ->name('.generate');
+                        Route::post('/{lottery}/codes/generated/export', 'export')
+                            ->whereNumber('lottery')
+                            ->name('.export');
                     });
             });
     });

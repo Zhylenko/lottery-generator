@@ -186,7 +186,7 @@ return [
          * Package Service Providers...
          */
         Orangehill\Iseed\IseedServiceProvider::class,
-
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -214,6 +214,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'CodeService' => App\Facades\Api\V1\CodeService::class,
         'LotteryCodeService' => App\Facades\Api\V1\LotteryCodeService::class,
+
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 ];
